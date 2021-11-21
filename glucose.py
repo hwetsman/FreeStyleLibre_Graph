@@ -49,6 +49,14 @@ def Create_Avg_DF(df):
     return avg_df
 
 
+def Limit_to_Current(df, start_date):
+    df.set_index('Device Timestamp', inplace=True, drop=True)
+    print(type(df.index[0]))
+    df = df[df.index >= start_date]
+    df.reset_index(inplace=True)
+    return df
+
+
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
@@ -74,6 +82,12 @@ print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 df.drop_duplicates(inplace=True)
 
+# ask for input for start date
+start_date = pd.to_datetime(
+    input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
+print(type(start_date))
+
+df = Limit_to_Current(df, start_date)
 # create df.Glu from measures
 df = Combine_Glu(df)
 
