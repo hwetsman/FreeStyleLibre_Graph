@@ -15,6 +15,13 @@ pd.set_option('display.expand_frame_repr', False)
 
 
 def Combine_Glu(df):
+    """ This function divides the df into measurements and notes where measurements
+    are the rows created by either historical, scanned or input glucose readings.
+    If first fills measurement columns with zeros for NaN's and then adds them
+    together in a new 'Glucose' column. The two created df's are then appended,
+    the unnecessary cols are dropped, the index is reset, and the df is
+    returned.
+    """
     print('\nCombining measurements...')
     notes = df[df['Record Type'] >= 5]
     measures = df[df['Record Type'] <= 2]
