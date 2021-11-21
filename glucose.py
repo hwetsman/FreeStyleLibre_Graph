@@ -4,6 +4,13 @@
 Created on Wed Oct 20 09:13:02 2021
 
 @author: howardwetsman
+To do: turn out put into a website
+        create dropdown for date instead of text input
+        interrogate Notes for food eaten
+        Offer foods eaten to users
+        create output showing foods eaten and 2hr pp by day
+        allow input of start and stop dates for daily meds
+        allow food graphs of 2 hour pp by meds
 """
 import os
 from matplotlib.pyplot import figure
