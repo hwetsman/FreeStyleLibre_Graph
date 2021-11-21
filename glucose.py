@@ -41,6 +41,14 @@ def Combine_Glu(df):
     return(df)
 
 
+def Create_Ave_DF(df):
+    df.set_index('DateTime', inplace=True, drop=True)
+    avg_df = df.groupby(
+        pd.Grouper(freq='d')).mean().dropna(how='all')
+    ave_df = avg_df[['Glucose']]
+    return avg_df
+
+
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
@@ -70,10 +78,7 @@ df.drop_duplicates(inplace=True)
 df = Combine_Glu(df)
 
 # create ave_df for mean glucose
-df.set_index('DateTime', inplace=True, drop=True)
-ave_df = df.groupby(
-    pd.Grouper(freq='d')).mean().dropna(how='all')
-ave_df = ave_df[['Glucose']]
+avg_df = Create_Avg_DF(df)
 print(ave_df)
 
 print('\nGenerating plot...')
