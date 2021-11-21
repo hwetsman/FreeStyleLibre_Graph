@@ -41,7 +41,7 @@ def Combine_Glu(df):
     return(df)
 
 
-def Create_Ave_DF(df):
+def Create_Avg_DF(df):
     df.set_index('DateTime', inplace=True, drop=True)
     avg_df = df.groupby(
         pd.Grouper(freq='d')).mean().dropna(how='all')
@@ -79,14 +79,14 @@ df = Combine_Glu(df)
 
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
-print(ave_df)
+print(avg_df)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
 plt.plot(df.index, df['Glucose'], label='Glu')
-plt.plot(ave_df.index, ave_df['Glucose'], label='Mean')
-plt.hlines(110, ave_df.index.min(), ave_df.index.max(), colors='red', linestyles='dashed')
-plt.hlines(75, ave_df.index.min(), ave_df.index.max(), colors='red', linestyles='dashed')
+plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
+plt.hlines(110, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
+plt.hlines(75, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
 plt.xticks(rotation='vertical')
 
 
