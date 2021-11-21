@@ -79,7 +79,6 @@ df = Combine_Glu(df)
 
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
-print(avg_df)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
