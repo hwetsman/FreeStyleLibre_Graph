@@ -1,13 +1,13 @@
 
 
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST']
+@app.route('/', methods=['GET', 'POST'])
 def input():
-    return "<h1>Freestyle Libre Data Reader</h1>"
+    return render_template('input.html')
 
 
 @ app.route("/graph")
