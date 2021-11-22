@@ -5,12 +5,12 @@ from flask import Flask
 app = Flask(__name__)
 
 
-@app.route("/")
-def hello_world():
+@app.route('/', methods=['GET', 'POST']
+def input():
     return "<h1>Freestyle Libre Data Reader</h1>"
 
 
-@app.route("/graph")
+@ app.route("/graph")
 def graph():
     return "<h1>Graph Goes Here</h1>"
 
