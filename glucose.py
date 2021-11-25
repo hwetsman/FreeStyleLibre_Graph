@@ -115,6 +115,8 @@ df = Combine_Glu(df)
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
 
+#add meds to the df
+df = Set_Meds(df,meds)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
