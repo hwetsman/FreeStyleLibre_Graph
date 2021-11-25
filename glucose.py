@@ -66,7 +66,7 @@ def Limit_to_Current(df, start_date):
     df.reset_index(inplace=True)
     return df
 
-def Set_Meds(df,meds):
+def Set_Meds(avg_df,meds):
     #set med cols to zeros
     for med in meds:
         name = med.get('name')
@@ -77,8 +77,10 @@ def Set_Meds(df,meds):
         end_year, end_month, end_day = end.split('-')
         days = np.arange(datetime(int(start_year),int(start_month),int(start_day)), datetime(int(end_year),int(end_month),int(end_day)), timedelta(days=1)).astype(datetime)
         for date in days:
-            print(date)
-            avg_df.loc[date,name] = 200
+            if date in avg_df.index:
+                avg_df.loc[date,name] = 200
+            else:
+                pass
     print(avg_df)
     #add 1's where appropriate
     return avg_df
@@ -129,7 +131,7 @@ print(avg_df)
 
 
 #add meds to the df
-avg_df = Set_Meds(df,meds)
+avg_df = Set_Meds(avg_df,meds)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
