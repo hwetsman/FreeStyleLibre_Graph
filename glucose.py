@@ -117,8 +117,9 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 df.drop_duplicates(inplace=True)
 
 # ask for input for start date
-start_date = pd.to_datetime(
-    input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
+#start_date = pd.to_datetime(
+    #input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
+start_date = pd.to_datetime('2021-09-01')
 print(type(start_date))
 
 df = Limit_to_Current(df, start_date)
