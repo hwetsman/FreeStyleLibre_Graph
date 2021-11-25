@@ -64,6 +64,12 @@ def Limit_to_Current(df, start_date):
     return df
 
 def Set_Meds(df,meds):
+    #set med cols to zeros
+    for med in meds:
+        df[med.get('name')] = 0
+    print(df)
+    1/0
+    #add 1's where appropriate
     return meds
 
 
@@ -108,6 +114,7 @@ df = Combine_Glu(df)
 
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
+
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
