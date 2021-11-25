@@ -63,6 +63,14 @@ def Limit_to_Current(df, start_date):
     df.reset_index(inplace=True)
     return df
 
+def Set_Meds(meds):
+    return meds
+
+
+cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
+metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
+CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
+meds = [cholestiramine,metformin,CoQ_10]
 
 # get most recent data
 path = './most_recent_data/'
