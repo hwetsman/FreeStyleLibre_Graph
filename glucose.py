@@ -16,6 +16,9 @@ import os
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.expand_frame_repr', False)
@@ -66,11 +69,19 @@ def Limit_to_Current(df, start_date):
 def Set_Meds(df,meds):
     #set med cols to zeros
     for med in meds:
-        df[med.get('name')] = 0
-    print(df)
-    1/0
+        name = med.get('name')
+        avg_df[name] = 0
+        start = med.get('start_date')
+        start_year, start_month, start_day = start.split('-')
+        end = med.get('end_date')
+        end_year, end_month, end_day = end.split('-')
+        days = np.arange(datetime(int(start_year),int(start_month),int(start_day)), datetime(int(end_year),int(end_month),int(end_day)), timedelta(days=1)).astype(datetime)
+        for date in days:
+            print(date)
+            avg_df.loc[date,name] = 200
+    print(avg_df)
     #add 1's where appropriate
-    return meds
+    return avg_df
 
 
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
@@ -114,14 +125,19 @@ df = Combine_Glu(df)
 
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
+print(avg_df)
+
 
 #add meds to the df
-df = Set_Meds(df,meds)
+avg_df = Set_Meds(df,meds)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
 plt.plot(df.index, df['Glucose'], label='Glu')
 plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
+for med in meds:
+    name = med.get('name')
+    plt.plot(avg_df.index,avg_df[name], label=name)
 plt.hlines(110, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
 plt.hlines(75, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
 plt.xticks(rotation='vertical')
