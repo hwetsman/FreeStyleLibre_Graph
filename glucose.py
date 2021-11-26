@@ -157,20 +157,27 @@ avg_df = Set_Meds(avg_df, meds)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
-#plt.plot(df.index, df['Glucose'], label='Glu')
-#plt.plot(std_df.index, avg_df['Glucose'] + std_df['Glucose']/2, label='sdh')
-#plt.plot(std_df.index, avg_df.Glucose - std_df.Glucose/2, label='sdl')
-plt.plot(avg_df.index, avg_df['Glucose'], label='Mean', color='white')
+# glucose
+plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
+# mean
+plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
+# std dev
 plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
-                 avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightblue')
+                 avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
+# meds
 for med in meds:
     name = med.get('name')
     plt.plot(avg_df.index, avg_df[name], label=name)
-plt.hlines(110, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
-plt.hlines(75, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
+# horizontal lines
+plt.hlines(110, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dotted', alpha=.4)
+plt.hlines(75, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dotted', alpha=.4)
+plt.hlines(100, avg_df.index.min(), avg_df.index.max(),
+           colors='red', linestyles='solid', linewidth=.7)
+plt.hlines(150, avg_df.index.min(), avg_df.index.max(),
+           colors='red', linestyles='solid', linewidth=.7)
+# xticks
 plt.xticks(rotation='vertical')
-
-
+# legend
 plt.legend(loc='upper left')
 plt.show()
 
