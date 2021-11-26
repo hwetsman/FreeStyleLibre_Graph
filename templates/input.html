@@ -5,9 +5,7 @@
         <h1>Input your data file</h1>
     </p>
 
-
-    <h3>Show a file-select field which allows only one file to be chosen:</h3>
-    <form action="/action_page.php">
+    <form>
       <label for="myfile">Select a file:</label>
       <input type="file" id="myfile" name="myfile"><br><br>
       <input type="submit">
@@ -16,7 +14,7 @@
 </div>
 
 
-
+<!-- this should be hidden until file above is submitted-->
 <div class="date_input_section">
     <div>
             <p>
@@ -43,9 +41,9 @@
         </select>
         <label for="start_day">Choose a starting date:</label>
         <select name="start_day" id="start_day">
-            <option value='1'>'1'</option>
-            <option value='15'>'15'</option>
-            <option value='31'>'31'</option>
+            <option value='1'>Begining</option>
+            <option value='15'>Middle</option>
+            <option value='31'>End</option>
         </select>
     </div>
 
@@ -68,9 +66,9 @@
         </select>
         <label for="end_day">Choose a ending date:</label>
         <select name="end_day" id="end_day">
-            <option value='1'>'1'</option>
-            <option value='15'>'15'</option>
-            <option value='31'>'31'</option>
+            <option value='1'>Begining</option>
+            <option value='15'>Middle</option>
+            <option value='31'>End</option>
         </select>
     </div>
 </div>
