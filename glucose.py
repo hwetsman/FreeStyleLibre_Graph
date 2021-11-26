@@ -114,7 +114,6 @@ df.drop(['Device', 'Serial Number',
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
-df.drop_duplicates(inplace=True)
 
 # ask for input for start date
 #start_date = pd.to_datetime(
@@ -125,6 +124,15 @@ print(type(start_date))
 df = Limit_to_Current(df, start_date)
 # create df.Glu from measures
 df = Combine_Glu(df)
+
+
+
+######################################
+#to do: drop duplicate index entries
+df.drop_duplicates(inplace=True)
+######################################
+
+
 
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
