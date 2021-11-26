@@ -1,0 +1,2 @@
+# Indroduction
+Management of glucose levels is an increasingly imporant healthcare tool. Recent advances in continuous glucose monitoring have popularlized the use of continuous glucose monitors (CGMs) such as the Abbot FreeStyle Libre. Reading the FreeStyle Libre is managed by the user with a smart phone app or a dedicated device and data is uploaded to the user's account at Abbott's portal, libreview.com .
