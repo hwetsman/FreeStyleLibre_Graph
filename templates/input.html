@@ -1,6 +1,6 @@
 <!doctype html>
 <title>Input Your Data</title>
-<div>
+<div class="file_input_section">
     <p>
         <h1>Input your data file</h1>
     </p>
@@ -15,13 +15,17 @@
 
 </div>
 
-<div>
-        <p>
-            <h1>Input your start and end dates</h1>
-        </p>
-</div>
-<div>
 
+
+<div class="date_input_section">
+    <div>
+            <p>
+                <h1>Input your start and end dates</h1>
+            </p>
+    </div>
+
+
+    <div>
         <label for="start_month">Choose a starting month:</label>
         <select name="start_month" id="start_month">
             <option value="jan">January</option>
@@ -43,11 +47,10 @@
             <option value='15'>'15'</option>
             <option value='31'>'31'</option>
         </select>
-</div>
+    </div>
 
 
-<div>
-
+    <div>
         <label for="end_month">Choose a ending month:</label>
         <select name="end_month" id="end_month">
             <option value="jan">January</option>
@@ -69,8 +72,10 @@
             <option value='15'>'15'</option>
             <option value='31'>'31'</option>
         </select>
+    </div>
 </div>
-<div>
+
+<div class="graph_generation_section">
     <h1>Generate Your Graph</h1>
     <button type="button">Generate Graph</button>
 </div>
