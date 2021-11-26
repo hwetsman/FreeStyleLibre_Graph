@@ -59,6 +59,14 @@ def Create_Avg_DF(df):
     return avg_df
 
 
+def Create_Std_DF(df):
+    #df.set_index('DateTime', inplace=True, drop=True)
+    std_df = df.groupby(
+        pd.Grouper(freq='d')).std().dropna(how='all')
+    std_df = std_df[['Glucose']]
+    return std_df
+
+
 def Limit_to_Current(df, start_date):
     df.set_index('Device Timestamp', inplace=True, drop=True)
     print(type(df.index[0]))
@@ -66,8 +74,9 @@ def Limit_to_Current(df, start_date):
     df.reset_index(inplace=True)
     return df
 
-def Set_Meds(avg_df,meds):
-    #set med cols to zeros
+
+def Set_Meds(avg_df, meds):
+    # set med cols to zeros
     for med in meds:
         name = med.get('name')
         avg_df[name] = 0
@@ -75,21 +84,22 @@ def Set_Meds(avg_df,meds):
         start_year, start_month, start_day = start.split('-')
         end = med.get('end_date')
         end_year, end_month, end_day = end.split('-')
-        days = np.arange(datetime(int(start_year),int(start_month),int(start_day)), datetime(int(end_year),int(end_month),int(end_day)), timedelta(days=1)).astype(datetime)
+        days = np.arange(datetime(int(start_year), int(start_month), int(start_day)), datetime(
+            int(end_year), int(end_month), int(end_day)), timedelta(days=1)).astype(datetime)
         for date in days:
             if date in avg_df.index:
-                avg_df.loc[date,name] = 200
+                avg_df.loc[date, name] = 200
             else:
                 pass
     print(avg_df)
-    #add 1's where appropriate
+    # add 1's where appropriate
     return avg_df
 
 
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
-meds = [cholestiramine,metformin,CoQ_10]
+meds = [cholestiramine, metformin, CoQ_10]
 
 # get most recent data
 path = './most_recent_data/'
@@ -116,8 +126,8 @@ print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 
 # ask for input for start date
-#start_date = pd.to_datetime(
-    #input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
+# start_date = pd.to_datetime(
+# input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
 start_date = pd.to_datetime('2021-09-01')
 print(type(start_date))
 
@@ -126,12 +136,10 @@ df = Limit_to_Current(df, start_date)
 df = Combine_Glu(df)
 
 
-
 ######################################
-#to do: drop duplicate index entries
+# to do: drop duplicate index entries
 df.drop_duplicates(inplace=True)
 ######################################
-
 
 
 # create ave_df for mean glucose
@@ -139,16 +147,25 @@ avg_df = Create_Avg_DF(df)
 print(avg_df)
 
 
-#add meds to the df
-avg_df = Set_Meds(avg_df,meds)
+# create std_df for mean glucose
+std_df = Create_Std_DF(df)
+print(std_df)
+
+
+# add meds to the df
+avg_df = Set_Meds(avg_df, meds)
 
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
-plt.plot(df.index, df['Glucose'], label='Glu')
-plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
+#plt.plot(df.index, df['Glucose'], label='Glu')
+#plt.plot(std_df.index, avg_df['Glucose'] + std_df['Glucose']/2, label='sdh')
+#plt.plot(std_df.index, avg_df.Glucose - std_df.Glucose/2, label='sdl')
+plt.plot(avg_df.index, avg_df['Glucose'], label='Mean', color='white')
+plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
+                 avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightblue')
 for med in meds:
     name = med.get('name')
-    plt.plot(avg_df.index,avg_df[name], label=name)
+    plt.plot(avg_df.index, avg_df[name], label=name)
 plt.hlines(110, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
 plt.hlines(75, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dashed')
 plt.xticks(rotation='vertical')
