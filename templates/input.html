@@ -2,11 +2,75 @@
 <title>Input Your Data</title>
 <div>
     <p>
-        Input your data file
-        </p>
-    </div>
+        <h1>Input your data file</h1>
+    </p>
+
+
+    <h3>Show a file-select field which allows only one file to be chosen:</h3>
+    <form action="/action_page.php">
+      <label for="myfile">Select a file:</label>
+      <input type="file" id="myfile" name="myfile"><br><br>
+      <input type="submit">
+    </form>
+
+</div>
+
 <div>
-    <p>
-        Input your start and end dates
+        <p>
+            <h1>Input your start and end dates</h1>
         </p>
-    </div>
+</div>
+<div>
+
+        <label for="start_month">Choose a starting month:</label>
+        <select name="start_month" id="start_month">
+            <option value="jan">January</option>
+            <option value="feb">February</option>
+            <option value="mar">March</option>
+            <option value="apr">April</option>
+            <option value="may">May</option>
+            <option value="jun">June</option>
+            <option value="jul">July</option>
+            <option value="aug">August</option>
+            <option value="sep">September</option>
+            <option value="oct">October</option>
+            <option value="nov">November</option>
+            <option value="dec">December</option>
+        </select>
+        <label for="start_day">Choose a starting date:</label>
+        <select name="start_day" id="start_day">
+            <option value='1'>'1'</option>
+            <option value='15'>'15'</option>
+            <option value='31'>'31'</option>
+        </select>
+</div>
+
+
+<div>
+
+        <label for="end_month">Choose a ending month:</label>
+        <select name="end_month" id="end_month">
+            <option value="jan">January</option>
+            <option value="feb">February</option>
+            <option value="mar">March</option>
+            <option value="apr">April</option>
+            <option value="may">May</option>
+            <option value="jun">June</option>
+            <option value="jul">July</option>
+            <option value="aug">August</option>
+            <option value="sep">September</option>
+            <option value="oct">October</option>
+            <option value="nov">November</option>
+            <option value="dec">December</option>
+        </select>
+        <label for="end_day">Choose a ending date:</label>
+        <select name="end_day" id="end_day">
+            <option value='1'>'1'</option>
+            <option value='15'>'15'</option>
+            <option value='31'>'31'</option>
+        </select>
+</div>
+<div>
+    <h1>Generate Your Graph</h1>
+    <button type="button">Generate Graph</button>
+</div>
