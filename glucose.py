@@ -128,7 +128,7 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 # ask for input for start date
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
-start_date = pd.to_datetime('2021-09-01')
+start_date = pd.to_datetime('2021-09-14')
 print(type(start_date))
 
 df = Limit_to_Current(df, start_date)
@@ -174,6 +174,10 @@ med_colors = ['red', 'yellow', 'blue', 'green', 'purple', 'pink']
 for i in range(med_num):
     med = meds[i]
     start = pd.to_datetime(med.get('start_date'))
+    if start < start_date:
+        start = start_date
+    else:
+        pass
     end = pd.to_datetime(med.get('end_date'))
     name = med.get('name')
     print(type(end))
