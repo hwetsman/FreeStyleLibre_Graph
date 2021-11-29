@@ -60,7 +60,7 @@ def Create_Avg_DF(df):
 
 
 def Create_Std_DF(df):
-    #df.set_index('DateTime', inplace=True, drop=True)
+    # df.set_index('DateTime', inplace=True, drop=True)
     std_df = df.groupby(
         pd.Grouper(freq='d')).std().dropna(how='all')
     std_df = std_df[['Glucose']]
@@ -165,12 +165,25 @@ plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
 plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
 # meds
-for med in meds:
+# for med in meds:
+#     name = med.get('name')
+#     plt.plot(avg_df.index, avg_df[name], label=name)
+
+med_num = len(meds)
+med_colors = ['red', 'yellow', 'blue', 'green', 'purple', 'pink']
+for i in range(med_num):
+    med = meds[i]
+    start = pd.to_datetime(med.get('start_date'))
+    end = pd.to_datetime(med.get('end_date'))
     name = med.get('name')
-    plt.plot(avg_df.index, avg_df[name], label=name)
+    print(type(end))
+    plt.hlines(4*i, start, end, linestyles='solid', alpha=.7,
+               linewidth=5, label=name, color=med_colors[i])
 # horizontal lines
-plt.hlines(110, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dotted', alpha=.4)
-plt.hlines(75, avg_df.index.min(), avg_df.index.max(), colors='red', linestyles='dotted', alpha=.4)
+plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
+           colors='red', linestyles='dotted', alpha=.4)
+plt.hlines(75, avg_df.index.min(), avg_df.index.max(),
+           colors='red', linestyles='dotted', alpha=.4)
 plt.hlines(100, avg_df.index.min(), avg_df.index.max(),
            colors='red', linestyles='solid', linewidth=.7)
 plt.hlines(150, avg_df.index.min(), avg_df.index.max(),
