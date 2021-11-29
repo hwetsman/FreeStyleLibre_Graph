@@ -3,3 +3,9 @@ Management of glucose levels is an increasingly imporant healthcare tool. Recent
 
 # Data
 While it is not usual for a git repo to contain data, I have decided to add a data file to this repo. As not everyone who will want to work on this project will have their own libreview data, a random sample file is necessary for development.
+
+# Meds
+The Libreview portal will show the user the acute effects of short acting meds such as insulin. I'd like to offer people a way to see the effects of daily meds on glucose. I want to add the ability to enter a start date and end date for daily meds and a way to graph the regression line of average daily glucose readings for the period during which the meds are taken
+
+# Contributing
+Fee free to fork, clone, put in a pull request or contribute in any way you see fit as long as you are willing to give away what you create here. 
