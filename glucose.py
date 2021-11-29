@@ -170,7 +170,7 @@ plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
 #     plt.plot(avg_df.index, avg_df[name], label=name)
 
 med_num = len(meds)
-med_colors = ['red', 'yellow', 'blue', 'green', 'purple', 'pink']
+med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink']
 for i in range(med_num):
     med = meds[i]
     start = pd.to_datetime(med.get('start_date'))
@@ -181,8 +181,8 @@ for i in range(med_num):
     end = pd.to_datetime(med.get('end_date'))
     name = med.get('name')
     print(type(end))
-    plt.hlines(4*i, start, end, linestyles='solid', alpha=.7,
-               linewidth=5, label=name, color=med_colors[i])
+    plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
+               linewidth=6, label=name, color=med_colors[i])
 # horizontal lines
 plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
            colors='red', linestyles='dotted', alpha=.4)
