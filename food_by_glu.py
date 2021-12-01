@@ -147,17 +147,6 @@ df.drop(['Device', 'Serial Number',
          'Ketone mmol/L', 'Meal Insulin (units)', 'Correction Insulin (units)',
          'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
 
-# create food_dict containing foods and number of times they occur in data
-# food_dict = {}
-# foods = list(set(df.Notes.tolist()))
-# contains_notes = df[~df.Notes.isnull()]
-# for food in foods:
-#     if isinstance(food, str):
-#         temp = contains_notes[contains_notes.Notes.str.contains(food)]
-#         if temp.shape[0] > 4:
-#             food_dict[food] = temp.shape[0]
-# print(food_dict)
-
 food_dict = Create_Food_Dict(df)
 
 # for food,number in food_dict.items()
