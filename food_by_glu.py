@@ -97,6 +97,18 @@ def Set_Meds(avg_df, meds):
     return avg_df
 
 
+def Create_Food_Dict(df):
+    food_dict = {}
+    foods = list(set(df.Notes.tolist()))
+    contains_notes = df[~df.Notes.isnull()]
+    for food in foods:
+        if isinstance(food, str):
+            temp = contains_notes[contains_notes.Notes.str.contains(food)]
+            if temp.shape[0] > 4:
+                food_dict[food] = temp.shape[0]
+    return food_dict
+
+
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -136,15 +148,28 @@ df.drop(['Device', 'Serial Number',
          'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
 
 # create food_dict containing foods and number of times they occur in data
-food_dict = {}
-foods = list(set(df.Notes.tolist()))
-contains_notes = df[~df.Notes.isnull()]
-for food in foods:
-    if isinstance(food, str):
-        temp = contains_notes[contains_notes.Notes.str.contains(food)]
-        if temp.shape[0] > 4:
-            food_dict[food] = temp.shape[0]
-print(food_dict)
+# food_dict = {}
+# foods = list(set(df.Notes.tolist()))
+# contains_notes = df[~df.Notes.isnull()]
+# for food in foods:
+#     if isinstance(food, str):
+#         temp = contains_notes[contains_notes.Notes.str.contains(food)]
+#         if temp.shape[0] > 4:
+#             food_dict[food] = temp.shape[0]
+# print(food_dict)
+
+food_dict = Create_Food_Dict(df)
+
+# for food,number in food_dict.items()
+# find the indexes at which the food appears in df.Notes
+# select the rows from those instances to 2 hours after those instances as temp_df
+# if there is another note in those rows discard the tmep_df
+# if the day it occurred is between start and stop of a med make that med in the med col
+# get the glucose col as a list
+# collect these lists in a dictionary per medication
+# average them for each medication
+# plot them out with 2 hours on the x axis and a line for each med tracing out
+# the glucose reaction to the food for each of those meds
 
 
 # create df.Glu from measures
