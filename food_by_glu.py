@@ -186,20 +186,26 @@ for food, number in food_dict.items():
     print(list_of_dfs)
 
 # if the day it occurred is between start and stop of a med make that med in the med col
+medicated_pp_list = []
 for pp_df in list_of_dfs:
     pp_df['med'] = ''
     date = pp_df.DateTime.tolist()[0].date()
     print(type(date))
-    for med in meds:
-        name = med.get('name')
-        start = pd.to_datetime(med.get('start_date'))
-        end = pd.to_datetime(med.get('end_date'))
-        if start <= date <= end:
-            pp_df['med'] = pp_df['med'] + ' ' + name
-        else:
-            pp_df['med'] = 'None'
-        print(pp_df)
-
+    any = False
+    while any == False:
+        for med in meds:
+            name = med.get('name')
+            start = pd.to_datetime(med.get('start_date'))
+            end = pd.to_datetime(med.get('end_date'))
+            if start <= date <= end:
+                pp_df['med'] = pp_df['med'] + ' ' + name
+                any = True
+            else:
+                pp_df['med'] = 'None'
+        medicated_pp_list.append(pp_df)
+print('\n\n')
+for dff in medicated_pp_list:
+    print(dff)
 1/0
 
 # get the glucose col as a list
