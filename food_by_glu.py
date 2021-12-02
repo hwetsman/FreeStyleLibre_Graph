@@ -157,7 +157,7 @@ food_dict = Create_Food_Dict(df)
 # get the glucose col as a list
 # collect these lists in a dictionary per medication
 # average them for each medication
-# plot them out with 2 hours on the x axis and a line for each med tracing out
+food = 'bowl of grits'
 # the glucose reaction to the food for each of those meds
 meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
@@ -166,7 +166,18 @@ meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
                 'None': {0: 96, 13: 100, 28: 101, 43: 105, 80: 112,
                          95: 110, 110: 110}
                 }
-# plot meds
+
+# normalize the meds_to_plot dicts:
+for med in meds_to_plot:
+    transformed_dict = {}
+    raw_dict = meds_to_plot.get(med)
+    start = raw_dict.get(0)
+    for k, v in raw_dict.items():
+        new_value = v-start
+        transformed_dict[k] = new_value
+    meds_to_plot[med] = transformed_dict
+
+# plot them out with 2 hours on the x axis and a line for each med tracing out
 for med in meds_to_plot:
     xy_dict = meds_to_plot.get(med)
     x = xy_dict.keys()
@@ -177,7 +188,7 @@ for med in meds_to_plot:
 else:
     pass
 plt.legend()
-plt.title('Post Food 2-hr Glucose Pattern')
+plt.title(f"2-hr Glucose Pattern After '{food}'")
 plt.xlabel('Minutes')
 plt.ylabel('Glucose')
 plt.show()
