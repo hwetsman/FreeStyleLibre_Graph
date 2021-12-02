@@ -151,10 +151,11 @@ df.drop(['Device', 'Serial Number',
 ######################################
 # to do: drop duplicate index entries
 df.drop_duplicates(inplace=True)
+df.rename(columns={'Device Timestamp': 'DateTime'}, inplace=True)
 ######################################
 
 # sort by datetime
-df = df.sort_values(by='Device Timestamp', ascending=True)
+df = df.sort_values(by='DateTime', ascending=True)
 print(df)
 df.to_csv('df_sorted.csv', index=False)
 
@@ -170,10 +171,10 @@ for food, number in food_dict.items():
     list_of_dfs = []
     for index in index_list:
         # find the start time for these indexes
-        start_time = df['Device Timestamp'][index]
+        start_time = df['DateTime'][index]
         end_time = start_time + pd.DateOffset(hours=2)
         # select the rows from those instances to 2 hours after those instances as temp_df
-        temp_df = df[(df['Device Timestamp'] >= start_time) & (df['Device Timestamp'] <= end_time)]
+        temp_df = df[(df['DateTime'] >= start_time) & (df['Device Timestamp'] <= end_time)]
         print(temp_df)
         raw_list = list(set(temp_df.Notes.tolist()))
         # remove nan from list
@@ -183,10 +184,12 @@ for food, number in food_dict.items():
         if len(final_list) == 1:
             list_of_dfs.append(temp_df)
     print(list_of_dfs)
-    1/0
-
-
+1/0
 # if the day it occurred is between start and stop of a med make that med in the med col
+# for lst ins list_of_dfs:
+#     date = lst.
+
+
 # get the glucose col as a list
 # collect these lists in a dictionary per medication
 # average them for each medication
