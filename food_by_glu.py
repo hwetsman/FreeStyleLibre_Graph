@@ -159,9 +159,14 @@ food_dict = Create_Food_Dict(df)
 # average them for each medication
 # plot them out with 2 hours on the x axis and a line for each med tracing out
 # the glucose reaction to the food for each of those meds
+meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
+                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
+                          'CoQ_10': {0: 125, 10: 120, 25: 118, 40: 107, 55: 97,
+                          70: 96, 85: 115, 100: 130, 115: 132},
+                          'None': {0: 96, 13: 100, 28: 101, 43: 105, 80: 112,
+                          95: 110, 110: 110}]}
 
 
-# create df.Glu from measures
 df = Combine_Glu(df)
 
 
@@ -170,7 +175,10 @@ df = Combine_Glu(df)
 df.drop_duplicates(inplace=True)
 ######################################
 
-
+df = df.sort_values(by='DateTime', ascending=True)
+print(df)
+df.to_csv('df_sorted.csv', index=False)
+1/0
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
 print(avg_df)
@@ -192,20 +200,20 @@ plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
 plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
 # std dev
 plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
-                 avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
+                 avg_df.Glucose - std_df.Glucose/2, alpha = 0.8, color = 'lightskyblue')
 
-med_num = len(meds)
-med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink']
+med_num=len(meds)
+med_colors=['red', 'blue', 'green', 'gold', 'purple', 'pink']
 for i in range(med_num):
-    med = meds[i]
-    start = pd.to_datetime(med.get('start_date'))
+    med=meds[i]
+    start=pd.to_datetime(med.get('start_date'))
     if start < start_date:
-        start = start_date
+        start=start_date
     else:
         pass
-    end = pd.to_datetime(med.get('end_date'))
-    name = med.get('name')
-    plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
+    end=pd.to_datetime(med.get('end_date'))
+    name=med.get('name')
+    plt.hlines(3*i, start, end, linestyles = 'solid', alpha = 1,
                linewidth=6, label=name, color=med_colors[i])
 # horizontal lines
 plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
