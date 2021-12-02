@@ -148,9 +148,21 @@ df.drop(['Device', 'Serial Number',
          'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
 
 food_dict = Create_Food_Dict(df)
+print(df.columns)
+# iterate food_dict to extract food and number of times it's mentioned
+for food, number in food_dict.items():
+    print(food, number)
+    # find the indexes at which the food appears in df.Notes
+    index_list = df[df.Notes == food].index.tolist()
+    # iterate the index_list
+    for index in index_list:
+        # find the start time for these indexes
+        start_time = df['Device Timestamp'][index]
+        end_time = start_time + pd.DateOffset(hours=2)
+        temp_df = df[(df['Device Timestamp'] >= start_time) & (df['Device Timestamp'] <= end_time)]
+        print(temp_df)
+    1/0
 
-# for food,number in food_dict.items()
-# find the indexes at which the food appears in df.Notes
 # select the rows from those instances to 2 hours after those instances as temp_df
 # if there is another note in those rows discard the tmep_df
 # if the day it occurred is between start and stop of a med make that med in the med col
