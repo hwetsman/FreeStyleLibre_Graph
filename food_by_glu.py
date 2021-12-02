@@ -147,6 +147,17 @@ df.drop(['Device', 'Serial Number',
          'Ketone mmol/L', 'Meal Insulin (units)', 'Correction Insulin (units)',
          'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
 
+
+######################################
+# to do: drop duplicate index entries
+df.drop_duplicates(inplace=True)
+######################################
+
+# sort by datetime
+df = df.sort_values(by='Device Timestamp', ascending=True)
+print(df)
+df.to_csv('df_sorted.csv', index=False)
+
 food_dict = Create_Food_Dict(df)
 print(df.columns)
 # iterate food_dict to extract food and number of times it's mentioned
@@ -207,14 +218,6 @@ plt.show()
 df = Combine_Glu(df)
 
 
-######################################
-# to do: drop duplicate index entries
-df.drop_duplicates(inplace=True)
-######################################
-
-df = df.sort_values(by='DateTime', ascending=True)
-print(df)
-df.to_csv('df_sorted.csv', index=False)
 1/0
 # create ave_df for mean glucose
 avg_df = Create_Avg_DF(df)
