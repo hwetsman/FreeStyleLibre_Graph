@@ -133,10 +133,8 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
 start_date = pd.to_datetime('2021-09-14')
-print(type(start_date))
 
 df = Limit_to_Current(df, start_date)
-
 
 # prune df
 print('\nDropping unneeded columns...')
@@ -188,7 +186,7 @@ for food, number in food_dict.items():
 # if the day it occurred is between start and stop of a med make that med in the med col
 medicated_pp_list = []
 for pp_df in list_of_dfs:
-    pp_df['med'] = ''
+    pp_df.loc[:, 'med'] = ''
     date = pp_df.DateTime.tolist()[0].date()
     print(type(date))
     any = False
@@ -201,7 +199,7 @@ for pp_df in list_of_dfs:
                 pp_df['med'] = pp_df['med'] + ' ' + name
                 any = True
             else:
-                pp_df['med'] = 'None'
+                pp_df.loc[:, 'med'] = 'None'
         medicated_pp_list.append(pp_df)
 print('\n\n')
 for dff in medicated_pp_list:
