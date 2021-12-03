@@ -118,6 +118,7 @@ def Feature_Eng(df):
              'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
     df.rename(columns={'Device Timestamp': 'DateTime'}, inplace=True)
     df = Combine_Glu(df)
+    return df
 
 
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
@@ -145,11 +146,14 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
 start_date = pd.to_datetime('2021-09-14')
 
-df = Limit_to_Current(df, start_date)
 
 # prune df
 print('\nDropping unneeded columns...')
+print(df)
 df = Feature_Eng(df)
+
+print('\nDropping and organizing records...')
+df = Limit_to_Current(df, start_date)
 print(df)
 1/0
 
