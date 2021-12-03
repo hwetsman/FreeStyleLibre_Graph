@@ -69,10 +69,12 @@ def Create_Std_DF(df):
 
 
 def Limit_to_Current(df, start_date):
-    df.set_index('Device Timestamp', inplace=True, drop=True)
+    df.set_index('DateTime', inplace=True, drop=True)
     print(type(df.index[0]))
     df = df[df.index >= start_date]
     df.reset_index(inplace=True)
+    df.drop_duplicates(inplace=True)
+    df = df.sort_values(by='DateTime', ascending=True)
     return df
 
 
@@ -154,19 +156,11 @@ df = Feature_Eng(df)
 
 print('\nDropping and organizing records...')
 df = Limit_to_Current(df, start_date)
+
+df.to_csv('df_sorted.csv', index=False)
 print(df)
 1/0
 
-######################################
-# to do: drop duplicate index entries
-df.drop_duplicates(inplace=True)
-
-######################################
-
-# sort by datetime
-df = df.sort_values(by='DateTime', ascending=True)
-print(df)
-df.to_csv('df_sorted.csv', index=False)
 
 food_dict = Create_Food_Dict(df)
 print(df.columns)
