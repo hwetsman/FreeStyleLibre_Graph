@@ -41,7 +41,7 @@ def Combine_Glu(df):
     measures.loc[:, 'Glu'] = measures.loc[:, 'Scan Glucose mg/dL'] + \
         measures.loc[:, 'Historic Glucose mg/dL']
     df = measures.append(notes)
-    df.sort_values(by='Device Timestamp', inplace=True)
+    #df.sort_values(by='Device Timestamp', inplace=True)
     df.drop(['Record Type',
              'Historic Glucose mg/dL',
              'Scan Glucose mg/dL',
@@ -109,6 +109,17 @@ def Create_Food_Dict(df):
     return food_dict
 
 
+def Feature_Eng(df):
+    df.drop(['Device', 'Serial Number',
+            'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
+             'Carbohydrates (grams)', 'Carbohydrates (servings)',
+             'Non-numeric Long-Acting Insulin', 'Long-Acting Insulin (units)',
+             'Ketone mmol/L', 'Meal Insulin (units)', 'Correction Insulin (units)',
+             'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
+    df.rename(columns={'Device Timestamp': 'DateTime'}, inplace=True)
+    df = Combine_Glu(df)
+
+
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -138,18 +149,14 @@ df = Limit_to_Current(df, start_date)
 
 # prune df
 print('\nDropping unneeded columns...')
-df.drop(['Device', 'Serial Number',
-        'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
-         'Carbohydrates (grams)', 'Carbohydrates (servings)',
-         'Non-numeric Long-Acting Insulin', 'Long-Acting Insulin (units)',
-         'Ketone mmol/L', 'Meal Insulin (units)', 'Correction Insulin (units)',
-         'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
-
+df = Feature_Eng(df)
+print(df)
+1/0
 
 ######################################
 # to do: drop duplicate index entries
 df.drop_duplicates(inplace=True)
-df.rename(columns={'Device Timestamp': 'DateTime'}, inplace=True)
+
 ######################################
 
 # sort by datetime
