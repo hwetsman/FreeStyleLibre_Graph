@@ -182,8 +182,8 @@ print(f'\nYou selected {food}.')
 # find the indexes at which the food appears in df.Notes
 index_list = df[df.Notes == food].index.tolist()
 print(index_list)
-1/0
-# iterate the index_list
+
+# iterate the index_list to create a list of plottable dfs
 list_of_dfs = []
 for index in index_list:
     # find the start time for these indexes
@@ -192,10 +192,24 @@ for index in index_list:
     # select the rows from those instances to 2 hours after those instances as temp_df
     temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
     print(temp_df)
+
+
+    temp_df.dropna(thresh=2,inplace=True)
+    print(temp_df)
+
+    1/0
     raw_list = list(set(temp_df.Notes.tolist()))
     # remove nan from list
     final_list = [x for x in raw_list if pd.isnull(x) == False]
-    print(final_list)
+    for df in final_list:
+        print(df)
+
+
+
+
+
+
+
     # if there is another note in those rows discard the tmep_df
     if len(final_list) == 1:
         list_of_dfs.append(temp_df)
