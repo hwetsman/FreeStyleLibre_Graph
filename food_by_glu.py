@@ -183,21 +183,24 @@ print(f'\nYou selected {food}.')
 index_list = df[df.Notes == food].index.tolist()
 print(index_list)
 
+print(df.DateTime[12199])
+1/0
+
 # iterate the index_list to create a list of plottable dfs
 list_of_dfs = []
-for index in index_list:
+for idx in index_list:
+    print(idx)
     # find the start time for these indexes
-    start_time = df['DateTime'][index]
+    start_time = df['DateTime'][idx]
     end_time = start_time + pd.DateOffset(hours=2)
     # select the rows from those instances to 2 hours after those instances as temp_df
     temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
+    # temp_df.dropna(thresh=2,inplace=True)
     print(temp_df)
-
-
-    temp_df.dropna(thresh=2,inplace=True)
-    print(temp_df)
-
-    1/0
+    #something is going wrong in this loop. i am not able to get the second index
+    #to pull a time. I am getting an error saying the index needs to be an int
+    #and it is. It works before the loop but the same index doesn't work after First
+    #one. 
     raw_list = list(set(temp_df.Notes.tolist()))
     # remove nan from list
     final_list = [x for x in raw_list if pd.isnull(x) == False]
