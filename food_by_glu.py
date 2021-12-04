@@ -161,10 +161,12 @@ df = Limit_to_Current(df, start_date)
 #save as interim
 df.to_csv('df_sorted.csv', index=False)
 print(df)
-1/0
 
 
+#create food_dict
 food_dict = Create_Food_Dict(df)
+print(food_dict)
+1/0
 print(df.columns)
 # iterate food_dict to extract food and number of times it's mentioned
 for food, number in food_dict.items():
@@ -189,6 +191,9 @@ for food, number in food_dict.items():
         if len(final_list) == 1:
             list_of_dfs.append(temp_df)
     print(list_of_dfs)
+
+
+
 
 # if the day it occurred is between start and stop of a med make that med in the med col
 medicated_pp_list = []
@@ -216,7 +221,7 @@ for dff in medicated_pp_list:
 # get the glucose col as a list
 # collect these lists in a dictionary per medication
 # average them for each medication
-food = 'grits x 2'
+food = 'Grits x 2'
 # the glucose reaction to the food for each of those meds
 meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
