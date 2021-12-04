@@ -166,8 +166,18 @@ print(df)
 #create food_dict
 food_dict = Create_Food_Dict(df)
 print(food_dict)
+
+#list of foods
+list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > 5]
+print('These foods are in the database more than 5 times and so may be worth plotting:')
+for food in list_of_plottable_foods:
+    print(food)
+# in web based iteration we would present this list to the user and let them choose in a drop down.
+# here we will hard code the food to use
+food = 'Grits x 2'
+print(f'\nYou selected {food}.')
+
 1/0
-print(df.columns)
 # iterate food_dict to extract food and number of times it's mentioned
 for food, number in food_dict.items():
     print(food, number)
@@ -191,7 +201,7 @@ for food, number in food_dict.items():
         if len(final_list) == 1:
             list_of_dfs.append(temp_df)
     print(list_of_dfs)
-
+    1/0
 
 
 
@@ -221,7 +231,7 @@ for dff in medicated_pp_list:
 # get the glucose col as a list
 # collect these lists in a dictionary per medication
 # average them for each medication
-food = 'Grits x 2'
+
 # the glucose reaction to the food for each of those meds
 meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
