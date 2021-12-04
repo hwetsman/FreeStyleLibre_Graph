@@ -149,14 +149,16 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
 start_date = pd.to_datetime('2021-09-14')
 
 
-# prune df
+# Engineer Features
 print('\nDropping unneeded columns...')
 print(df)
 df = Feature_Eng(df)
 
+#Limit records
 print('\nDropping and organizing records...')
 df = Limit_to_Current(df, start_date)
 
+#save as interim
 df.to_csv('df_sorted.csv', index=False)
 print(df)
 1/0
@@ -214,7 +216,7 @@ for dff in medicated_pp_list:
 # get the glucose col as a list
 # collect these lists in a dictionary per medication
 # average them for each medication
-food = 'bowl of grits'
+food = 'grits x 2'
 # the glucose reaction to the food for each of those meds
 meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
