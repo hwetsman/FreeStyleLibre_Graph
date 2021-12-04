@@ -177,31 +177,30 @@ for food in list_of_plottable_foods:
 food = 'Grits x 2'
 print(f'\nYou selected {food}.')
 
+
+# get dfs of 2 hour post prandial periods after eating 'food'
+# find the indexes at which the food appears in df.Notes
+index_list = df[df.Notes == food].index.tolist()
+print(index_list)
 1/0
-# iterate food_dict to extract food and number of times it's mentioned
-for food, number in food_dict.items():
-    print(food, number)
-    # find the indexes at which the food appears in df.Notes
-    index_list = df[df.Notes == food].index.tolist()
-    print(index_list)
-    # iterate the index_list
-    list_of_dfs = []
-    for index in index_list:
-        # find the start time for these indexes
-        start_time = df['DateTime'][index]
-        end_time = start_time + pd.DateOffset(hours=2)
-        # select the rows from those instances to 2 hours after those instances as temp_df
-        temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
-        print(temp_df)
-        raw_list = list(set(temp_df.Notes.tolist()))
-        # remove nan from list
-        final_list = [x for x in raw_list if pd.isnull(x) == False]
-        print(final_list)
-        # if there is another note in those rows discard the tmep_df
-        if len(final_list) == 1:
-            list_of_dfs.append(temp_df)
-    print(list_of_dfs)
-    1/0
+# iterate the index_list
+list_of_dfs = []
+for index in index_list:
+    # find the start time for these indexes
+    start_time = df['DateTime'][index]
+    end_time = start_time + pd.DateOffset(hours=2)
+    # select the rows from those instances to 2 hours after those instances as temp_df
+    temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
+    print(temp_df)
+    raw_list = list(set(temp_df.Notes.tolist()))
+    # remove nan from list
+    final_list = [x for x in raw_list if pd.isnull(x) == False]
+    print(final_list)
+    # if there is another note in those rows discard the tmep_df
+    if len(final_list) == 1:
+        list_of_dfs.append(temp_df)
+print(list_of_dfs)
+1/0
 
 
 
