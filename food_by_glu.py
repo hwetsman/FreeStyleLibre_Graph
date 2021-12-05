@@ -184,7 +184,8 @@ index_list = df[df.Notes == food].index.tolist()
 print(f'There are {len(index_list)} entries in your index list')
 
 # iterate the index_list to create a list of plottable dfs
-list_of_dfs = []
+# list_of_dfs = []
+dict_of_dfs = {}
 for idx in index_list:
     print(f'The first index is {idx}.')
     # find the start time for these indexes
@@ -214,11 +215,13 @@ for idx in index_list:
 
     # if there is another note in those rows discard the tmep_df
     if len(final_list) == 1:
-        list_of_dfs.append(temp_df)
+        # list_of_dfs.append(temp_df)
+        dict_of_dfs[start_time] = temp_df
         print('appending it')
     else:
         print('not appending it')
-print(f'There are {len(list_of_dfs)} dfs in the list')
+# print(f'There are {len(list_of_dfs)} dfs in the list')
+print(dict_of_dfs)
 1/0
 
 
