@@ -215,7 +215,10 @@ for idx in index_list:
 
     # if there is another note in those rows discard the tmep_df
     if len(final_list) == 1:
-        # list_of_dfs.append(temp_df)
+        temp_df.Notes = final_list[0]
+        temp_df=temp_df[~temp_df.Glucose.isnull()]
+        print(temp_df)
+        1/0
         dict_of_dfs[start_time] = temp_df
         print('appending it')
     else:
