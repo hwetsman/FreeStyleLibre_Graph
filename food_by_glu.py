@@ -217,17 +217,26 @@ for idx in index_list:
     if len(final_list) == 1:
         temp_df.Notes = final_list[0]
         temp_df=temp_df[~temp_df.Glucose.isnull()]
-        print(temp_df)
-        1/0
         dict_of_dfs[start_time] = temp_df
         print('appending it')
     else:
         print('not appending it')
 # print(f'There are {len(list_of_dfs)} dfs in the list')
 print(dict_of_dfs)
+
+
+#iterate dict_of_dfs
+for k,v in dict_of_dfs.items():
+    date_of_food = k.date()
+    print(date_of_food)
+    for med in meds:
+        name = med.get('name')
+        start = pd.to_datetime(med.get('start_date'))
+        end = pd.to_datetime(med.get('end_date'))
+        if start <= date_of_food <= end:
+            print(date_of_food,name)
+    #if key is in any med, add add the df to the med dicts
 1/0
-
-
 
 # if the day it occurred is between start and stop of a med make that med in the med col
 medicated_pp_list = []
