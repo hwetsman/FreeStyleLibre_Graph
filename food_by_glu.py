@@ -181,42 +181,44 @@ print(f'\nYou selected {food}.')
 # get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
 index_list = df[df.Notes == food].index.tolist()
-print(index_list)
-
-print(df.DateTime[12199])
-1/0
+print(f'There are {len(index_list)} entries in your index list')
 
 # iterate the index_list to create a list of plottable dfs
 list_of_dfs = []
 for idx in index_list:
-    print(idx)
+    print(f'The first index is {idx}.')
     # find the start time for these indexes
     start_time = df['DateTime'][idx]
+    print(f'The start time is {start_time}.')
     end_time = start_time + pd.DateOffset(hours=2)
+    print(f'The end time is {end_time}.')
+
     # select the rows from those instances to 2 hours after those instances as temp_df
     temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
     # temp_df.dropna(thresh=2,inplace=True)
+    print('Here is the temporary df')
     print(temp_df)
+
     #something is going wrong in this loop. i am not able to get the second index
     #to pull a time. I am getting an error saying the index needs to be an int
     #and it is. It works before the loop but the same index doesn't work after First
-    #one. 
+    #one.
     raw_list = list(set(temp_df.Notes.tolist()))
+    print('here is the raw list')
+    print(raw_list)
     # remove nan from list
     final_list = [x for x in raw_list if pd.isnull(x) == False]
-    for df in final_list:
-        print(df)
-
-
-
-
-
+    print('here is the list after removing NaNs.')
+    print(final_list)
 
 
     # if there is another note in those rows discard the tmep_df
     if len(final_list) == 1:
         list_of_dfs.append(temp_df)
-print(list_of_dfs)
+        print('appending it')
+    else:
+        print('not appending it')
+print(f'There are {len(list_of_dfs)} dfs in the list')
 1/0
 
 
