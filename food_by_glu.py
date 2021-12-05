@@ -225,40 +225,36 @@ for idx in index_list:
 print(dict_of_dfs)
 
 
-#iterate dict_of_dfs
-for k,v in dict_of_dfs.items():
-    date_of_food = k.date()
-    print(date_of_food)
-    for med in meds:
-        name = med.get('name')
-        start = pd.to_datetime(med.get('start_date'))
-        end = pd.to_datetime(med.get('end_date'))
-        if start <= date_of_food <= end:
-            print(date_of_food,name)
-    #if key is in any med, add add the df to the med dicts
-1/0
+#iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
+pp_med_dict = {}
 
-# if the day it occurred is between start and stop of a med make that med in the med col
-medicated_pp_list = []
-for pp_df in list_of_dfs:
-    pp_df.loc[:, 'med'] = ''
-    date = pp_df.DateTime.tolist()[0].date()
-    print(type(date))
-    any = False
-    while any == False:
-        for med in meds:
-            name = med.get('name')
-            start = pd.to_datetime(med.get('start_date'))
-            end = pd.to_datetime(med.get('end_date'))
-            if start <= date <= end:
-                pp_df['med'] = pp_df['med'] + ' ' + name
-                any = True
-            else:
-                pp_df.loc[:, 'med'] = 'None'
-        medicated_pp_list.append(pp_df)
+for med in meds:
+    ind_med_dict={}
+    name = med.get('name')
+    pp_med_dict[name]={}
+    start = pd.to_datetime(med.get('start_date'))
+    end = pd.to_datetime(med.get('end_date'))
+    print(name)
+    for k,v in dict_of_dfs.items():
+        update_dict={}
+        date_of_food = k.date()
+        print(date_of_food)
+        if start <= date_of_food <= end:
+            update_dict[k]=v
+            ind_med_dict.update(update_dict)
+    pp_med_dict[name].update(ind_med_dict)
+
+print(pp_med_dict)
+
+
+
 print('\n\n')
-for dff in medicated_pp_list:
-    print(dff)
+for name in pp_med_dict:
+    print(name)
+    dict_of_dfs = pp_med_dict.get(name)
+    for k,v in dict_of_dfs.items():
+        print(k)
+        print(v)
 1/0
 
 # get the glucose col as a list
