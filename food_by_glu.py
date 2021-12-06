@@ -246,15 +246,32 @@ for med in meds:
 
 print(pp_med_dict)
 
-
-
+#normalize all glucose values to zero start
 print('\n\n')
 for name in pp_med_dict:
     print(name)
     dict_of_dfs = pp_med_dict.get(name)
     for k,v in dict_of_dfs.items():
         print(k)
-        print(v)
+
+        start_time = v['DateTime'].tolist()[0]
+        start = v['Glucose'].tolist()[0]
+        v.Glucose = (v.Glucose - start).astype(int)
+        v['Time_Delta']= v.DateTime - start_time
+        v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
+        nv = v[['Minutes','Glucose']]
+        print(nv)
+        # print(type(v.iloc[0,3]))
+
+        #v['Minutes'] = v.Time_Delta.seconds/60
+        #(td / np.timedelta64(1, 'D')).astype(int)
+        dict_of_dfs[k]=nv
+# for name in pp_med_dict:
+#     print(name)
+#     dict_of_dfs = pp_med_dict.get(name)
+#     for k,v in dict_of_dfs.items():
+#         print(k)
+#         prin`t(v)
 1/0
 
 # get the glucose col as a list
