@@ -249,35 +249,35 @@ print(pp_med_dict)
 #normalize all glucose values to zero start
 print('\n\n')
 for name in pp_med_dict:
-    print(name)
     dict_of_dfs = pp_med_dict.get(name)
     for k,v in dict_of_dfs.items():
-        print(k)
-
         start_time = v['DateTime'].tolist()[0]
         start = v['Glucose'].tolist()[0]
         v.Glucose = (v.Glucose - start).astype(int)
         v['Time_Delta']= v.DateTime - start_time
         v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
         nv = v[['Minutes','Glucose']]
-        print(nv)
-        # print(type(v.iloc[0,3]))
-
-        #v['Minutes'] = v.Time_Delta.seconds/60
-        #(td / np.timedelta64(1, 'D')).astype(int)
         dict_of_dfs[k]=nv
+
 # for name in pp_med_dict:
-#     print(name)
+#     print('\n',name)
 #     dict_of_dfs = pp_med_dict.get(name)
 #     for k,v in dict_of_dfs.items():
 #         print(k)
-#         prin`t(v)
+#         print(v)
+
+for name in pp_med_dict:
+    print('\n',name)
+    plot_df = pd.DataFrame()
+    dict_of_dfs = pp_med_dict.get(name)
+    for k,v in dict_of_dfs.items():
+        plot_df = plot_df.append(v)
+    print(plot_df)
+    plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
+    pp_med_dict[name] = plot_df
+
+    print(plot_df)
 1/0
-
-# get the glucose col as a list
-# collect these lists in a dictionary per medication
-# average them for each medication
-
 # the glucose reaction to the food for each of those meds
 meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
