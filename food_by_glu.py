@@ -259,24 +259,26 @@ for name in pp_med_dict:
         nv = v[['Minutes','Glucose']]
         dict_of_dfs[k]=nv
 
-# for name in pp_med_dict:
-#     print('\n',name)
-#     dict_of_dfs = pp_med_dict.get(name)
-#     for k,v in dict_of_dfs.items():
-#         print(k)
-#         print(v)
-
+#combine all 2hr pp dfs for a med and get mean glucose for every minute
 for name in pp_med_dict:
     print('\n',name)
     plot_df = pd.DataFrame()
     dict_of_dfs = pp_med_dict.get(name)
     for k,v in dict_of_dfs.items():
         plot_df = plot_df.append(v)
-    print(plot_df)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     pp_med_dict[name] = plot_df
-
     print(plot_df)
+
+meds_to_plot = {}
+for name in pp_med_dict:
+    print('\n',name)
+    df = pp_med_dict.get(name)
+    print(df)
+    new_dict = df.to_dict()
+    print(new_dict)
+    meds_to_plot[name] = new_dict
+print(meds_to_plot)
 1/0
 # the glucose reaction to the food for each of those meds
 meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
