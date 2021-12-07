@@ -68,6 +68,21 @@ def Create_Std_DF(df):
     return std_df
 
 
+def Trim_Food_Dict(food_dict, occurances):
+    """
+    inputs(dict,int)
+    food_dict (dict): a dictionary of foods in the dataset as key and the number of
+    occurances of that food as the value
+    occurances (int): the number of occurances the user wishes to use as the filter
+    for the output list of foods
+    ouput(list)
+    The output is a list of foods occuring more often in the dataset than the
+    occurances cut off.
+    """
+    list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > occurances]
+    return list_of_plottable_foods
+
+
 def Limit_to_Current(df, start_date):
     df.set_index('DateTime', inplace=True, drop=True)
     print(type(df.index[0]))
@@ -168,8 +183,11 @@ food_dict = Create_Food_Dict(df)
 print(food_dict)
 
 # list of foods
-list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > 5]
-print('These foods are in the database more than 5 times and so may be worth plotting:')
+# at this point ask the user for the number of occurances they want to filter by
+# in this case the filter is set hard below for speed in development
+filter = 5
+list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
+print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
 for food in list_of_plottable_foods:
     print(food)
 # in web based iteration we would present this list to the user and let them choose in a drop down.
