@@ -16,6 +16,7 @@ import os
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 import pandas as pd
+pd.options.mode.chained_assignment = None
 import numpy as np
 from datetime import datetime, timedelta
 import seaborn as sns
@@ -36,10 +37,16 @@ def Combine_Glu(df):
     print('\nCombining measurements...')
     notes = df[df['Record Type'] >= 5]
     measures = df[df['Record Type'] <= 2]
-    measures['Historic Glucose mg/dL'].fillna(value=0, inplace=True)
-    measures['Scan Glucose mg/dL'].fillna(value=0, inplace=True)
-    measures.loc[:, 'Glu'] = measures.loc[:, 'Scan Glucose mg/dL'] + \
-        measures.loc[:, 'Historic Glucose mg/dL']
+    measures[['Historic Glucose mg/dL','Scan Glucose mg/dL']] = measures[['Historic Glucose mg/dL','Scan Glucose mg/dL']].fillna(value=0)
+
+    #measures = measures_na['Scan Glucose mg/dL'].fillna(value=0)
+    # measures.loc[:, 'Glu'] = measures.loc[:, 'Scan Glucose mg/dL'] + \
+    #     measures.loc[:, 'Historic Glucose mg/dL']
+    print(measures.head())
+    measures['Glu'] = measures.loc[:,['Historic Glucose mg/dL','Scan Glucose mg/dL']].sum(axis=1)
+    print(measures.head())
+    # measures[['Glu']] = measures[['Scan Glucose mg/dL']] + measures[['Historic Glucose mg/dL']]
+    print('\nmark here\n')
     df = measures.append(notes)
     #df.sort_values(by='Device Timestamp', inplace=True)
     df.drop(['Record Type',
@@ -85,7 +92,6 @@ def Trim_Food_Dict(food_dict, occurances):
 
 def Limit_to_Current(df, start_date):
     df.set_index('DateTime', inplace=True, drop=True)
-    print(type(df.index[0]))
     df = df[df.index >= start_date]
     df.reset_index(inplace=True)
     df.drop_duplicates(inplace=True)
@@ -109,7 +115,6 @@ def Set_Meds(avg_df, meds):
                 avg_df.loc[date, name] = 200
             else:
                 pass
-    print(avg_df)
     # add 1's where appropriate
     return avg_df
 
@@ -198,7 +203,6 @@ start_date = pd.to_datetime('2021-09-14')
 
 # Engineer Features
 print('\nDropping unneeded columns...')
-print(df)
 df = Feature_Eng(df)
 
 # Limit records
@@ -241,7 +245,6 @@ dict_of_dfs = Create_Food_DFs(df, index_list)
 
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
 pp_med_dict = {}
-
 for med in meds:
     ind_med_dict = {}
     name = med.get('name')
