@@ -126,6 +126,38 @@ def Create_Food_Dict(df):
     return food_dict
 
 
+def Create_Food_DFs(df, index_list):
+    """
+    Input:
+    df (pandas dataframe): The dataframe being suggested
+    index_list (python list): a list of indeces in the df where food notations
+    appear
+    Action: finds the time at which the food is listed, calculates 2 hours
+    after the food is listed, grabs a temp_df of the two hour post prandial readings,
+    determines if any other factors were listed during those two hours and if so
+    omit that df from consideration, and then appending the df to a dictionary.
+    Output:
+    dict1 (python dictionary) with unique start time as key and df as value
+    """
+    dict1 = {}
+    for idx in index_list:
+        # find the start time for these indexes
+        start_time = df['DateTime'][idx]
+        end_time = start_time + pd.DateOffset(hours=2)
+        # select the rows from those instances to 2 hours after those instances as temp_df
+        temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
+        # temp_df.dropna(thresh=2,inplace=True)
+        raw_list = list(set(temp_df.Notes.tolist()))
+        # remove nan from list
+        final_list = [x for x in raw_list if pd.isnull(x) == False]
+        # if there is another note in those rows discard the tmep_df
+        if len(final_list) == 1:
+            temp_df.Notes = final_list[0]
+            temp_df = temp_df[~temp_df.Glucose.isnull()]
+            dict1[start_time] = temp_df
+    return dict1
+
+
 def Feature_Eng(df):
     df.drop(['Device', 'Serial Number',
             'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
@@ -177,7 +209,6 @@ df = Limit_to_Current(df, start_date)
 df.to_csv('df_sorted.csv', index=False)
 print(df)
 
-
 # create food_dict
 food_dict = Create_Food_Dict(df)
 print(food_dict)
@@ -203,45 +234,9 @@ print(f'\nYou selected {food}.')
 index_list = df[df.Notes == food].index.tolist()
 print(f'There are {len(index_list)} entries in your index list')
 
-# iterate the index_list to create a list of plottable dfs
-
-dict_of_dfs = {}
-for idx in index_list:
-    print(f'The first index is {idx}.')
-    # find the start time for these indexes
-    start_time = df['DateTime'][idx]
-    print(f'The start time is {start_time}.')
-    end_time = start_time + pd.DateOffset(hours=2)
-    print(f'The end time is {end_time}.')
-
-    # select the rows from those instances to 2 hours after those instances as temp_df
-    temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
-    # temp_df.dropna(thresh=2,inplace=True)
-    print('Here is the temporary df')
-    print(temp_df)
-
-    # something is going wrong in this loop. i am not able to get the second index
-    # to pull a time. I am getting an error saying the index needs to be an int
-    # and it is. It works before the loop but the same index doesn't work after First
-    # one.
-    raw_list = list(set(temp_df.Notes.tolist()))
-    print('here is the raw list')
-    print(raw_list)
-    # remove nan from list
-    final_list = [x for x in raw_list if pd.isnull(x) == False]
-    print('here is the list after removing NaNs.')
-    print(final_list)
-
-    # if there is another note in those rows discard the tmep_df
-    if len(final_list) == 1:
-        temp_df.Notes = final_list[0]
-        temp_df = temp_df[~temp_df.Glucose.isnull()]
-        dict_of_dfs[start_time] = temp_df
-        print('appending it')
-    else:
-        print('not appending it')
-# print(f'There are {len(list_of_dfs)} dfs in the list')
-print(dict_of_dfs)
+# iterate the index_list to create a list of post prandial dfs
+print('\nCreating post prandial dataframes...')
+dict_of_dfs = Create_Food_DFs(df, index_list)
 
 
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
