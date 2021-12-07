@@ -154,27 +154,29 @@ print('\nDropping unneeded columns...')
 print(df)
 df = Feature_Eng(df)
 
-#Limit records
+# Limit records
 print('\nDropping and organizing records...')
 df = Limit_to_Current(df, start_date)
 
-#save as interim
+# save as interim
 df.to_csv('df_sorted.csv', index=False)
 print(df)
 
 
-#create food_dict
+# create food_dict
 food_dict = Create_Food_Dict(df)
 print(food_dict)
 
-#list of foods
+# list of foods
 list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > 5]
 print('These foods are in the database more than 5 times and so may be worth plotting:')
 for food in list_of_plottable_foods:
     print(food)
 # in web based iteration we would present this list to the user and let them choose in a drop down.
 # here we will hard code the food to use
+#food = 'Crackers'
 food = 'Grits x 2'
+# food = 'Ice cream'
 print(f'\nYou selected {food}.')
 
 
@@ -200,10 +202,10 @@ for idx in index_list:
     print('Here is the temporary df')
     print(temp_df)
 
-    #something is going wrong in this loop. i am not able to get the second index
-    #to pull a time. I am getting an error saying the index needs to be an int
-    #and it is. It works before the loop but the same index doesn't work after First
-    #one.
+    # something is going wrong in this loop. i am not able to get the second index
+    # to pull a time. I am getting an error saying the index needs to be an int
+    # and it is. It works before the loop but the same index doesn't work after First
+    # one.
     raw_list = list(set(temp_df.Notes.tolist()))
     print('here is the raw list')
     print(raw_list)
@@ -212,11 +214,10 @@ for idx in index_list:
     print('here is the list after removing NaNs.')
     print(final_list)
 
-
     # if there is another note in those rows discard the tmep_df
     if len(final_list) == 1:
         temp_df.Notes = final_list[0]
-        temp_df=temp_df[~temp_df.Glucose.isnull()]
+        temp_df = temp_df[~temp_df.Glucose.isnull()]
         dict_of_dfs[start_time] = temp_df
         print('appending it')
     else:
@@ -225,54 +226,55 @@ for idx in index_list:
 print(dict_of_dfs)
 
 
-#iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
+# iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
 pp_med_dict = {}
 
 for med in meds:
-    ind_med_dict={}
+    ind_med_dict = {}
     name = med.get('name')
-    pp_med_dict[name]={}
+    pp_med_dict[name] = {}
     start = pd.to_datetime(med.get('start_date'))
     end = pd.to_datetime(med.get('end_date'))
     print(name)
-    for k,v in dict_of_dfs.items():
-        update_dict={}
+    for k, v in dict_of_dfs.items():
+        update_dict = {}
         date_of_food = k.date()
         print(date_of_food)
         if start <= date_of_food <= end:
-            update_dict[k]=v
+            update_dict[k] = v
             ind_med_dict.update(update_dict)
     pp_med_dict[name].update(ind_med_dict)
 
 print(pp_med_dict)
 
-#normalize all glucose values to zero start
+# normalize all glucose values to zero start
 print('\n\n')
 for name in pp_med_dict:
     dict_of_dfs = pp_med_dict.get(name)
-    for k,v in dict_of_dfs.items():
+    for k, v in dict_of_dfs.items():
         start_time = v['DateTime'].tolist()[0]
         start = v['Glucose'].tolist()[0]
         v.Glucose = (v.Glucose - start).astype(int)
-        v['Time_Delta']= v.DateTime - start_time
+        v['Time_Delta'] = v.DateTime - start_time
         v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
-        nv = v[['Minutes','Glucose']]
-        dict_of_dfs[k]=nv
+        nv = v[['Minutes', 'Glucose']]
+        dict_of_dfs[k] = nv
 
-#combine all 2hr pp dfs for a med and get mean glucose for every minute
+# combine all 2hr pp dfs for a med and get mean glucose for every minute
 for name in pp_med_dict:
-    print('\n',name)
+    print('\n', name)
     plot_df = pd.DataFrame()
     dict_of_dfs = pp_med_dict.get(name)
-    for k,v in dict_of_dfs.items():
+    for k, v in dict_of_dfs.items():
         plot_df = plot_df.append(v)
+    print(plot_df)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     pp_med_dict[name] = plot_df
     print(plot_df)
 
 meds_to_plot = {}
 for name in pp_med_dict:
-    print('\n',name)
+    print('\n', name)
     df = pp_med_dict.get(name)
     print(df)
     new_dict = df.to_dict()
@@ -314,60 +316,62 @@ plt.title(f"2-hr Glucose Pattern After '{food}'")
 plt.xlabel('Minutes')
 plt.ylabel('Glucose')
 plt.show()
-df = Combine_Glu(df)
 
 
-1/0
-# create ave_df for mean glucose
-avg_df = Create_Avg_DF(df)
-print(avg_df)
+# df = Combine_Glu(df)
 
 
-# create std_df for mean glucose
-std_df = Create_Std_DF(df)
-print(std_df)
-
-
-# add meds to the df
-avg_df = Set_Meds(avg_df, meds)
-
-print('\nGenerating plot...')
-figure(figsize=(15, 8))
-# glucose
-plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
-# mean
-plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
-# std dev
-plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
-                 avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
-
-med_num = len(meds)
-med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink']
-for i in range(med_num):
-    med = meds[i]
-    start = pd.to_datetime(med.get('start_date'))
-    if start < start_date:
-        start = start_date
-    else:
-        pass
-    end = pd.to_datetime(med.get('end_date'))
-    name = med.get('name')
-    plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
-               linewidth=6, label=name, color=med_colors[i])
-# horizontal lines
-plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
-           colors='red', linestyles='dotted', alpha=.4)
-plt.hlines(75, avg_df.index.min(), avg_df.index.max(),
-           colors='red', linestyles='dotted', alpha=.4)
-plt.hlines(100, avg_df.index.min(), avg_df.index.max(),
-           colors='red', linestyles='solid', linewidth=.7)
-plt.hlines(150, avg_df.index.min(), avg_df.index.max(),
-           colors='red', linestyles='solid', linewidth=.7)
-# xticks
-plt.xticks(rotation='vertical')
-# legend
-plt.legend(loc='upper left')
-plt.show()
-
-
+# 1/0
+# # create ave_df for mean glucose
+# avg_df = Create_Avg_DF(df)
+# print(avg_df)
 #
+#
+# # create std_df for mean glucose
+# std_df = Create_Std_DF(df)
+# print(std_df)
+#
+#
+# # add meds to the df
+# avg_df = Set_Meds(avg_df, meds)
+#
+# print('\nGenerating plot...')
+# figure(figsize=(15, 8))
+# # glucose
+# plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
+# # mean
+# plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
+# # std dev
+# plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
+#                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
+#
+# med_num = len(meds)
+# med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink']
+# for i in range(med_num):
+#     med = meds[i]
+#     start = pd.to_datetime(med.get('start_date'))
+#     if start < start_date:
+#         start = start_date
+#     else:
+#         pass
+#     end = pd.to_datetime(med.get('end_date'))
+#     name = med.get('name')
+#     plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
+#                linewidth=6, label=name, color=med_colors[i])
+# # horizontal lines
+# plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
+#            colors='red', linestyles='dotted', alpha=.4)
+# plt.hlines(75, avg_df.index.min(), avg_df.index.max(),
+#            colors='red', linestyles='dotted', alpha=.4)
+# plt.hlines(100, avg_df.index.min(), avg_df.index.max(),
+#            colors='red', linestyles='solid', linewidth=.7)
+# plt.hlines(150, avg_df.index.min(), avg_df.index.max(),
+#            colors='red', linestyles='solid', linewidth=.7)
+# # xticks
+# plt.xticks(rotation='vertical')
+# # legend
+# plt.legend(loc='upper left')
+# plt.show()
+#
+#
+# #
