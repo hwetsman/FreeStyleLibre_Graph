@@ -204,7 +204,7 @@ index_list = df[df.Notes == food].index.tolist()
 print(f'There are {len(index_list)} entries in your index list')
 
 # iterate the index_list to create a list of plottable dfs
-# list_of_dfs = []
+
 dict_of_dfs = {}
 for idx in index_list:
     print(f'The first index is {idx}.')
