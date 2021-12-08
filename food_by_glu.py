@@ -12,15 +12,16 @@ To do: turn out put into a website
         allow input of start and stop dates for daily meds
         allow food graphs of 2 hour pp by meds
 """
+import statsmodels.formula.api as sm
+import time
+import seaborn as sns
+from datetime import datetime, timedelta
+import numpy as np
 import os
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 import pandas as pd
 pd.options.mode.chained_assignment = None
-import numpy as np
-from datetime import datetime, timedelta
-import seaborn as sns
-import time
 
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.max_rows', 500)
@@ -38,8 +39,9 @@ def Combine_Glu(df):
     print('\nCombining measurements...')
     notes = df[df['Record Type'] >= 5]
     measures = df[df['Record Type'] <= 2]
-    measures[['Historic Glucose mg/dL','Scan Glucose mg/dL']] = measures[['Historic Glucose mg/dL','Scan Glucose mg/dL']].fillna(value=0)
-    measures['Glu'] = measures.loc[:,['Historic Glucose mg/dL','Scan Glucose mg/dL']].sum(axis=1)
+    measures[['Historic Glucose mg/dL', 'Scan Glucose mg/dL']
+             ] = measures[['Historic Glucose mg/dL', 'Scan Glucose mg/dL']].fillna(value=0)
+    measures['Glu'] = measures.loc[:, ['Historic Glucose mg/dL', 'Scan Glucose mg/dL']].sum(axis=1)
     df = measures.append(notes)
     df.drop(['Record Type',
              'Historic Glucose mg/dL',
@@ -49,6 +51,7 @@ def Combine_Glu(df):
     df.set_index('DateTime', inplace=True, drop=True)
     df.reset_index(inplace=True)
     return(df)
+
 
 def Trim_Food_Dict(food_dict, occurances):
     """
@@ -137,6 +140,14 @@ def Create_Food_DFs(df, index_list):
     return dict1
 
 
+def Create_Model(df):
+    result = sm.ols(formula="Glu ~ Minutes", data=plot_df).fit()
+    intercept = result.params['Intercept']
+    b = result.params['Minutes']
+    plot_df['Est'] = b*plot_df['Minutes']+intercept
+    return plot_df
+
+
 def Feature_Eng(df):
     df.drop(['Device', 'Serial Number',
             'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
@@ -148,7 +159,8 @@ def Feature_Eng(df):
     df = Combine_Glu(df)
     return df
 
-time0=time.time()
+
+time0 = time.time()
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -167,7 +179,7 @@ for file in files:
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
-df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'],format="%m-%d-%Y %I:%M %p")
+df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
 # ask for input for start date
 # start_date = pd.to_datetime(
@@ -255,6 +267,17 @@ for name in pp_med_dict:
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     pp_med_dict[name] = plot_df
 
+
+# create ols cols in dfs
+print('working on ols...')
+for name in pp_med_dict:
+    print(name)
+    plot_df = pd.DataFrame(pp_med_dict.get(name))
+    plot_df.columns = ['Glu']
+    plot_df.reset_index(drop=False, inplace=True)
+    plot_df = Create_Model(plot_df)
+    pp_med_dict[name] = plot_df
+
 print('\nGetting data to plot...')
 meds_to_plot = {}
 for name in pp_med_dict:
@@ -287,49 +310,6 @@ plt.title(f"2-hr Glucose Pattern After '{food}'")
 plt.xlabel('Minutes')
 plt.ylabel('Glucose')
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #
