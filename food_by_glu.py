@@ -20,6 +20,7 @@ pd.options.mode.chained_assignment = None
 import numpy as np
 from datetime import datetime, timedelta
 import seaborn as sns
+import time
 
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.max_rows', 500)
@@ -48,27 +49,6 @@ def Combine_Glu(df):
     df.set_index('DateTime', inplace=True, drop=True)
     df.reset_index(inplace=True)
     return(df)
-
-
-# def Create_Avg_DF(df):
-#     df.set_index('DateTime', inplace=True, drop=True)
-#     avg_df = df.groupby(
-#         pd.Grouper(freq='d')).mean().dropna(how='all')
-#     ave_df = avg_df[['Glucose']]
-#     return avg_df
-
-
-# def Create_Std_DF(df):
-#     """
-#     Input: df (pandas dataframe) -
-#     Action:
-#     Output:
-#     """
-#     std_df = df.groupby(
-#         pd.Grouper(freq='d')).std().dropna(how='all')
-#     std_df = std_df[['Glucose']]
-#     return std_df
-
 
 def Trim_Food_Dict(food_dict, occurances):
     """
@@ -110,7 +90,6 @@ def Set_Meds(avg_df, meds):
                 avg_df.loc[date, name] = 200
             else:
                 pass
-    # add 1's where appropriate
     return avg_df
 
 
@@ -169,7 +148,7 @@ def Feature_Eng(df):
     df = Combine_Glu(df)
     return df
 
-
+time0=time.time()
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -224,6 +203,7 @@ list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
 print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
 for food in list_of_plottable_foods:
     print(food)
+    
 # in web based iteration we would present this list to the user and let them choose in a drop down.
 # here we will hard code the food to use
 #food = 'Crackers'
@@ -297,15 +277,9 @@ for name in pp_med_dict:
     meds_to_plot[name] = new_dict
 print(meds_to_plot)
 
-# the glucose reaction to the food for each of those meds
-# meds_to_plot = {'CLSM': {0: 90, 13: 98, 28: 104, 43: 107, 58: 135,
-#                          73: 128, 88: 134, 95: 113, 100: 104, 107: 107, 117: 110, 119: 119},
-#                 'CoQ_10': {0: 125, 10: 120, 25: 118, 40: 107, 55: 97,
-#                            70: 96, 85: 115, 100: 130, 115: 132},
-#                 'None': {0: 96, 13: 100, 28: 101, 43: 105, 80: 112,
-#                          95: 110, 110: 110}
-#                 }
 
+time1 = time.time()
+print(f'This took {time1-time0} seconds.')
 # normalize the meds_to_plot dicts:
 for med in meds_to_plot:
     transformed_dict = {}
@@ -333,60 +307,47 @@ plt.ylabel('Glucose')
 plt.show()
 
 
-# df = Combine_Glu(df)
 
 
-# 1/0
-# # create ave_df for mean glucose
-# avg_df = Create_Avg_DF(df)
-# print(avg_df)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #
-#
-# # create std_df for mean glucose
-# std_df = Create_Std_DF(df)
-# print(std_df)
-#
-#
-# # add meds to the df
-# avg_df = Set_Meds(avg_df, meds)
-#
-# print('\nGenerating plot...')
-# figure(figsize=(15, 8))
-# # glucose
-# plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
-# # mean
-# plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
-# # std dev
-# plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
-#                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
-#
-# med_num = len(meds)
-# med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink']
-# for i in range(med_num):
-#     med = meds[i]
-#     start = pd.to_datetime(med.get('start_date'))
-#     if start < start_date:
-#         start = start_date
-#     else:
-#         pass
-#     end = pd.to_datetime(med.get('end_date'))
-#     name = med.get('name')
-#     plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
-#                linewidth=6, label=name, color=med_colors[i])
-# # horizontal lines
-# plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
-#            colors='red', linestyles='dotted', alpha=.4)
-# plt.hlines(75, avg_df.index.min(), avg_df.index.max(),
-#            colors='red', linestyles='dotted', alpha=.4)
-# plt.hlines(100, avg_df.index.min(), avg_df.index.max(),
-#            colors='red', linestyles='solid', linewidth=.7)
-# plt.hlines(150, avg_df.index.min(), avg_df.index.max(),
-#            colors='red', linestyles='solid', linewidth=.7)
-# # xticks
-# plt.xticks(rotation='vertical')
-# # legend
-# plt.legend(loc='upper left')
-# plt.show()
-#
-#
-# #
