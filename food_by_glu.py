@@ -294,8 +294,7 @@ for name in pp_med_dict:
     print(new_dict)
     meds_to_plot[name] = new_dict
 
-time1 = time.time()
-print(f'This took {time1-time0} seconds.')
+
 # normalize the meds_to_plot dicts:
 for med in meds_to_plot:
     transformed_dict = {}
@@ -306,6 +305,9 @@ for med in meds_to_plot:
         transformed_dict[k] = new_value
     meds_to_plot[med] = transformed_dict
 
+
+time1 = time.time()
+print(f'This took {time1-time0} seconds.')
 # plot them out with 2 hours on the x axis and a line for each med tracing out
 for med in meds_to_plot:
     xy_dict = meds_to_plot.get(med)
