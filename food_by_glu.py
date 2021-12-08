@@ -50,20 +50,24 @@ def Combine_Glu(df):
     return(df)
 
 
-def Create_Avg_DF(df):
-    df.set_index('DateTime', inplace=True, drop=True)
-    avg_df = df.groupby(
-        pd.Grouper(freq='d')).mean().dropna(how='all')
-    ave_df = avg_df[['Glucose']]
-    return avg_df
+# def Create_Avg_DF(df):
+#     df.set_index('DateTime', inplace=True, drop=True)
+#     avg_df = df.groupby(
+#         pd.Grouper(freq='d')).mean().dropna(how='all')
+#     ave_df = avg_df[['Glucose']]
+#     return avg_df
 
 
-def Create_Std_DF(df):
-    # df.set_index('DateTime', inplace=True, drop=True)
-    std_df = df.groupby(
-        pd.Grouper(freq='d')).std().dropna(how='all')
-    std_df = std_df[['Glucose']]
-    return std_df
+# def Create_Std_DF(df):
+#     """
+#     Input: df (pandas dataframe) -
+#     Action:
+#     Output:
+#     """
+#     std_df = df.groupby(
+#         pd.Grouper(freq='d')).std().dropna(how='all')
+#     std_df = std_df[['Glucose']]
+#     return std_df
 
 
 def Trim_Food_Dict(food_dict, occurances):
@@ -184,7 +188,11 @@ for file in files:
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
-df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
+print(df['Device Timestamp'])
+
+df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'],format="%m-%d-%Y %I:%M %p")
+
+
 
 # ask for input for start date
 # start_date = pd.to_datetime(
