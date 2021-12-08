@@ -269,9 +269,7 @@ for name in pp_med_dict:
 
 
 # create ols cols in dfs
-print('working on ols...')
 for name in pp_med_dict:
-    print(name)
     plot_df = pd.DataFrame(pp_med_dict.get(name))
     plot_df.columns = ['Glu']
     plot_df.reset_index(drop=False, inplace=True)
@@ -291,12 +289,12 @@ for name in pp_med_dict:
     df = pp_med_dict.get(name)
     #df.drop('Glu', axis=1, inplace=True)
     new_dict = df.to_dict().get('Est')
-    print(new_dict)
     meds_to_plot[name] = new_dict
 
 
 # normalize the meds_to_plot dicts:
 for med in meds_to_plot:
+    print(med)
     transformed_dict = {}
     raw_dict = meds_to_plot.get(med)
     start = raw_dict.get(0)
