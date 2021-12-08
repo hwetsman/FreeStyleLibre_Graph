@@ -276,13 +276,22 @@ for name in pp_med_dict:
     plot_df.columns = ['Glu']
     plot_df.reset_index(drop=False, inplace=True)
     plot_df = Create_Model(plot_df)
+    plot_df.set_index('Minutes', inplace=True, drop=True)
     pp_med_dict[name] = plot_df
+
+# for name in pp_med_dict:
+#     print(name)
+#     print(pp_med_dict.get(name))
+#     print()
+
 
 print('\nGetting data to plot...')
 meds_to_plot = {}
 for name in pp_med_dict:
     df = pp_med_dict.get(name)
-    new_dict = df.to_dict()
+    #df.drop('Glu', axis=1, inplace=True)
+    new_dict = df.to_dict().get('Est')
+    print(new_dict)
     meds_to_plot[name] = new_dict
 
 time1 = time.time()
