@@ -38,17 +38,8 @@ def Combine_Glu(df):
     notes = df[df['Record Type'] >= 5]
     measures = df[df['Record Type'] <= 2]
     measures[['Historic Glucose mg/dL','Scan Glucose mg/dL']] = measures[['Historic Glucose mg/dL','Scan Glucose mg/dL']].fillna(value=0)
-
-    #measures = measures_na['Scan Glucose mg/dL'].fillna(value=0)
-    # measures.loc[:, 'Glu'] = measures.loc[:, 'Scan Glucose mg/dL'] + \
-    #     measures.loc[:, 'Historic Glucose mg/dL']
-    print(measures.head())
     measures['Glu'] = measures.loc[:,['Historic Glucose mg/dL','Scan Glucose mg/dL']].sum(axis=1)
-    print(measures.head())
-    # measures[['Glu']] = measures[['Scan Glucose mg/dL']] + measures[['Historic Glucose mg/dL']]
-    print('\nmark here\n')
     df = measures.append(notes)
-    #df.sort_values(by='Device Timestamp', inplace=True)
     df.drop(['Record Type',
              'Historic Glucose mg/dL',
              'Scan Glucose mg/dL',
