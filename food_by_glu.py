@@ -213,7 +213,7 @@ for food in list_of_plottable_foods:
 # here we will hard code the food to use
 #food = 'Crackers'
 food = 'Grits x 2'
-# food = 'Crackers and pb'
+food = 'Crackers and pb'
 # food = 'Ice cream'
 print(f'\nYou selected {food}.')
 
@@ -230,28 +230,48 @@ dict_of_dfs = Create_Food_DFs(df, index_list)
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
 print('\nAdding meds to post prandial dataframes...')
 pp_med_dict = {}
+
 for med in meds:
     ind_med_dict = {}
     name = med.get('name')
     print(name)
-    pp_med_dict[name] = {}
+
     start = pd.to_datetime(med.get('start_date')).date()
-    print('start', type(start))
     end = pd.to_datetime(med.get('end_date')).date()
-    print(type(end))
     for k, v in dict_of_dfs.items():
         update_dict = {}
         date_of_food = k.date()
-        print(type(date_of_food))
         if start <= date_of_food <= end:
             update_dict[k] = v
             ind_med_dict.update(update_dict)
-    pp_med_dict[name].update(ind_med_dict)
+
+        else:
+            print('nothing here')
+    print('ind_med_dict', ind_med_dict)
+    print(len(ind_med_dict))
+    print('current pp_med_dict', pp_med_dict)
+    print('\n\n')
+
+    if len(ind_med_dict) >= 1:
+        pp_med_dict[name] = {}
+        print(name, 'is here')
+        print()
+        print()
+        pp_med_dict[name].update(ind_med_dict)
+    else:
+        pass
+    print('\n\n\n\n', pp_med_dict, '\n\n\n\n')
+print()
+print()
+print(pp_med_dict)
 
 # normalize all glucose values to zero start
 print('\nNormalizing glucose values...')
 for name in pp_med_dict:
+    print(name)
     dict_of_dfs = pp_med_dict.get(name)
+    print(dict_of_dfs)
+
     for k, v in dict_of_dfs.items():
         start_time = v['DateTime'].tolist()[0]
         start = v['Glucose'].tolist()[0]
@@ -260,17 +280,22 @@ for name in pp_med_dict:
         v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
         nv = v[['Minutes', 'Glucose']]
         dict_of_dfs[k] = nv
+        print(dict_of_dfs)
 
 # combine all 2hr pp dfs for a med and get mean glucose for every minute
 print('\nCombining all post prandial dataframes by med...')
 for name in pp_med_dict:
+    print(name)
     plot_df = pd.DataFrame()
     dict_of_dfs = pp_med_dict.get(name)
+    print(dict_of_dfs)
     for k, v in dict_of_dfs.items():
+        print(k)
+        print(v)
         plot_df = plot_df.append(v)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     pp_med_dict[name] = plot_df
-
+    print(plot_df)
 
 # create ols cols in dfs
 for name in pp_med_dict:
