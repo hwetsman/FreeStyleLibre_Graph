@@ -203,7 +203,7 @@ df = Limit_to_Current(df, start_date)
 
 # save as interim
 df.to_csv('df_sorted.csv', index=False)
-
+org_df = df
 # create food_dict
 food_dict = Create_Food_Dict(df)
 
@@ -218,131 +218,123 @@ for food in list_of_plottable_foods:
 
 # in web based iteration we would present this list to the user and let them choose in a drop down.
 # here we will hard code the food to use
-# food = 'Crackers'
+
 food = 'Grits x 2'
 food = 'Crackers and pb'
 food = 'pizza'
-# food = 'Ice cream'
-# food = 'eggs'
-# food = 'bacon'
 food = 'grits'
-# food = 'burger'
 food = 'cheese'
-# food = 'salad'
 food = 'crackers'
 food = food.lower()
+list_of_plotable_foods = ['grits x 2', 'crackers and pb', 'pizza', 'grits', 'cheese', 'crackers']
+for food in list_of_plotable_foods:
+    df = org_df
+    # get dfs of 2 hour post prandial periods after eating 'food'
+    # find the indexes at which the food appears in df.Notes
+    index_list = Get_Index_List(df, food)
+    print(f'{food.title()} occurs {len(index_list)} times in the dataset')
 
-# get dfs of 2 hour post prandial periods after eating 'food'
-# find the indexes at which the food appears in df.Notes
-index_list = Get_Index_List(df, food)
-print(f'{food.title()} occurs {len(index_list)} times in the dataset')
+    # iterate the index_list to create a list of post prandial dfs
+    print('\nCreating post prandial dataframes...')
+    dict_of_dfs = Create_Food_DFs(df, index_list)
 
-# iterate the index_list to create a list of post prandial dfs
-print('\nCreating post prandial dataframes...')
-dict_of_dfs = Create_Food_DFs(df, index_list)
+    # want to add an interation of all the indeces
+    # to create a no_meds dict of dfs to add to pp_med_dict latter
 
+    # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
+    print('\nAdding meds to post prandial dataframes...')
+    pp_med_dict = {}
+    for med in meds:
+        ind_med_dict = {}
+        name = med.get('name')
 
-# want to add an interation of all the indeces
-# to create a no_meds dict of dfs to add to pp_med_dict latter
+        start = pd.to_datetime(med.get('start_date')).date()
+        end = pd.to_datetime(med.get('end_date')).date()
+        for k, v in dict_of_dfs.items():
+            update_dict = {}
+            date_of_food = k.date()
+            if start <= date_of_food <= end:
+                update_dict[k] = v
+                ind_med_dict.update(update_dict)
 
+        if len(ind_med_dict) >= 1:
+            pp_med_dict[name] = {}
+            pp_med_dict[name].update(ind_med_dict)
+        else:
+            pass
 
-# iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
-print('\nAdding meds to post prandial dataframes...')
-pp_med_dict = {}
-for med in meds:
-    ind_med_dict = {}
-    name = med.get('name')
+    # normalize all glucose values to zero start
+    print('\nNormalizing glucose values...')
+    for name in pp_med_dict:
+        dict_of_dfs = pp_med_dict.get(name)
 
-    start = pd.to_datetime(med.get('start_date')).date()
-    end = pd.to_datetime(med.get('end_date')).date()
-    for k, v in dict_of_dfs.items():
-        update_dict = {}
-        date_of_food = k.date()
-        if start <= date_of_food <= end:
-            update_dict[k] = v
-            ind_med_dict.update(update_dict)
+        for k, v in dict_of_dfs.items():
+            start_time = v['DateTime'].tolist()[0]
+            start = v['Glucose'].tolist()[0]
+            v.Glucose = (v.Glucose - start).astype(int)
+            v['Time_Delta'] = v.DateTime - start_time
+            v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
+            nv = v[['Minutes', 'Glucose']]
+            dict_of_dfs[k] = nv
 
-    if len(ind_med_dict) >= 1:
-        pp_med_dict[name] = {}
-        pp_med_dict[name].update(ind_med_dict)
+    # combine all 2hr pp dfs for a med and get mean glucose for every minute
+    print('\nCombining all post prandial dataframes by med...')
+    for name in pp_med_dict:
+        plot_df = pd.DataFrame()
+        dict_of_dfs = pp_med_dict.get(name)
+        for k, v in dict_of_dfs.items():
+            plot_df = plot_df.append(v)
+        plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
+        pp_med_dict[name] = plot_df
+
+    # create ols cols in dfs
+    for name in pp_med_dict:
+        plot_df = pd.DataFrame(pp_med_dict.get(name))
+        plot_df.columns = ['Glu']
+        plot_df.reset_index(drop=False, inplace=True)
+        plot_df = Create_Model(plot_df)
+        plot_df.set_index('Minutes', inplace=True, drop=True)
+        pp_med_dict[name] = plot_df
+
+    # for name in pp_med_dict:
+    #     print(name)
+    #     print(pp_med_dict.get(name))
+    #     print()
+
+    print('\nGetting data to plot...')
+    meds_to_plot = {}
+    for name in pp_med_dict:
+        df = pp_med_dict.get(name)
+        # df.drop('Glu', axis=1, inplace=True)
+        new_dict = df.to_dict().get('Est')
+        meds_to_plot[name] = new_dict
+
+    # normalize the meds_to_plot dicts:
+    for med in meds_to_plot:
+        print(med)
+        transformed_dict = {}
+        raw_dict = meds_to_plot.get(med)
+        start = raw_dict.get(0)
+        for k, v in raw_dict.items():
+            new_value = v-start
+            transformed_dict[k] = new_value
+        meds_to_plot[med] = transformed_dict
+
+    time1 = time.time()
+    print(f'This took {time1-time0} seconds.')
+    # plot them out with 2 hours on the x axis and a line for each med tracing out
+    for med in meds_to_plot:
+        xy_dict = meds_to_plot.get(med)
+        x = xy_dict.keys()
+        y = xy_dict.values()
+        plt.plot(x, y, label=med)
     else:
         pass
-
-# normalize all glucose values to zero start
-print('\nNormalizing glucose values...')
-for name in pp_med_dict:
-    dict_of_dfs = pp_med_dict.get(name)
-
-    for k, v in dict_of_dfs.items():
-        start_time = v['DateTime'].tolist()[0]
-        start = v['Glucose'].tolist()[0]
-        v.Glucose = (v.Glucose - start).astype(int)
-        v['Time_Delta'] = v.DateTime - start_time
-        v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
-        nv = v[['Minutes', 'Glucose']]
-        dict_of_dfs[k] = nv
-
-# combine all 2hr pp dfs for a med and get mean glucose for every minute
-print('\nCombining all post prandial dataframes by med...')
-for name in pp_med_dict:
-    plot_df = pd.DataFrame()
-    dict_of_dfs = pp_med_dict.get(name)
-    for k, v in dict_of_dfs.items():
-        plot_df = plot_df.append(v)
-    plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
-    pp_med_dict[name] = plot_df
-
-# create ols cols in dfs
-for name in pp_med_dict:
-    plot_df = pd.DataFrame(pp_med_dict.get(name))
-    plot_df.columns = ['Glu']
-    plot_df.reset_index(drop=False, inplace=True)
-    plot_df = Create_Model(plot_df)
-    plot_df.set_index('Minutes', inplace=True, drop=True)
-    pp_med_dict[name] = plot_df
-
-# for name in pp_med_dict:
-#     print(name)
-#     print(pp_med_dict.get(name))
-#     print()
-
-
-print('\nGetting data to plot...')
-meds_to_plot = {}
-for name in pp_med_dict:
-    df = pp_med_dict.get(name)
-    # df.drop('Glu', axis=1, inplace=True)
-    new_dict = df.to_dict().get('Est')
-    meds_to_plot[name] = new_dict
-
-
-# normalize the meds_to_plot dicts:
-for med in meds_to_plot:
-    print(med)
-    transformed_dict = {}
-    raw_dict = meds_to_plot.get(med)
-    start = raw_dict.get(0)
-    for k, v in raw_dict.items():
-        new_value = v-start
-        transformed_dict[k] = new_value
-    meds_to_plot[med] = transformed_dict
-
-
-time1 = time.time()
-print(f'This took {time1-time0} seconds.')
-# plot them out with 2 hours on the x axis and a line for each med tracing out
-for med in meds_to_plot:
-    xy_dict = meds_to_plot.get(med)
-    x = xy_dict.keys()
-    y = xy_dict.values()
-    plt.plot(x, y, label=med)
-else:
-    pass
-plt.legend()
-plt.title(f"2-hr Glucose Pattern After '{food}'")
-plt.xlabel('Minutes')
-plt.ylabel('Glucose')
-plt.show()
+    plt.legend()
+    plt.title(f"2-hr Glucose Pattern After '{food}'")
+    plt.xlabel('Minutes')
+    plt.ylabel('Glucose')
+    plt.show()
 
 
 #
