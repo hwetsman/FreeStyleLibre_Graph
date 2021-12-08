@@ -213,6 +213,7 @@ for food in list_of_plottable_foods:
 # here we will hard code the food to use
 #food = 'Crackers'
 food = 'Grits x 2'
+# food = 'Crackers and pb'
 # food = 'Ice cream'
 print(f'\nYou selected {food}.')
 
@@ -226,19 +227,22 @@ print(f'There are {len(index_list)} entries in your index list')
 print('\nCreating post prandial dataframes...')
 dict_of_dfs = Create_Food_DFs(df, index_list)
 
-
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
 print('\nAdding meds to post prandial dataframes...')
 pp_med_dict = {}
 for med in meds:
     ind_med_dict = {}
     name = med.get('name')
+    print(name)
     pp_med_dict[name] = {}
-    start = pd.to_datetime(med.get('start_date'))
-    end = pd.to_datetime(med.get('end_date'))
+    start = pd.to_datetime(med.get('start_date')).date()
+    print('start', type(start))
+    end = pd.to_datetime(med.get('end_date')).date()
+    print(type(end))
     for k, v in dict_of_dfs.items():
         update_dict = {}
         date_of_food = k.date()
+        print(type(date_of_food))
         if start <= date_of_food <= end:
             update_dict[k] = v
             ind_med_dict.update(update_dict)
