@@ -141,10 +141,11 @@ def Create_Food_DFs(df, index_list):
 
 
 def Create_Model(df):
-    result = sm.ols(formula="Glu ~ Minutes", data=plot_df).fit()
+    result = sm.ols(formula="Glu ~ np.power(Minutes, 2) + Minutes", data=plot_df).fit()
+    a = result.params['np.power(Minutes, 2)']
     intercept = result.params['Intercept']
     b = result.params['Minutes']
-    plot_df['Est'] = b*plot_df['Minutes']+intercept
+    plot_df['Est'] = a*plot_df['Minutes']**2+b*plot_df['Minutes']+intercept
     return plot_df
 
 
@@ -160,9 +161,11 @@ def Feature_Eng(df):
     df = Combine_Glu(df)
     return df
 
-def Get_Index_List(df,food):
+
+def Get_Index_List(df, food):
     index_list = df[df.Notes == food].index.tolist()
     return index_list
+
 
 time0 = time.time()
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
@@ -215,7 +218,7 @@ for food in list_of_plottable_foods:
 
 # in web based iteration we would present this list to the user and let them choose in a drop down.
 # here we will hard code the food to use
-#food = 'Crackers'
+# food = 'Crackers'
 food = 'Grits x 2'
 food = 'Crackers and pb'
 food = 'pizza'
@@ -231,18 +234,21 @@ food = food.lower()
 
 # get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
-index_list = Get_Index_List(df,food)
-# index_list = df[df.Notes == food].index.tolist()
+index_list = Get_Index_List(df, food)
 print(f'{food.title()} occurs {len(index_list)} times in the dataset')
 
 # iterate the index_list to create a list of post prandial dfs
 print('\nCreating post prandial dataframes...')
 dict_of_dfs = Create_Food_DFs(df, index_list)
 
+
+# want to add an interation of all the indeces
+# to create a no_meds dict of dfs to add to pp_med_dict latter
+
+
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
 print('\nAdding meds to post prandial dataframes...')
 pp_med_dict = {}
-
 for med in meds:
     ind_med_dict = {}
     name = med.get('name')
@@ -305,7 +311,7 @@ print('\nGetting data to plot...')
 meds_to_plot = {}
 for name in pp_med_dict:
     df = pp_med_dict.get(name)
-    #df.drop('Glu', axis=1, inplace=True)
+    # df.drop('Glu', axis=1, inplace=True)
     new_dict = df.to_dict().get('Est')
     meds_to_plot[name] = new_dict
 
