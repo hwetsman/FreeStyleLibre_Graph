@@ -204,7 +204,7 @@ food_dict = Create_Food_Dict(df)
 # list of foods
 # at this point ask the user for the number of occurances they want to filter by
 # in this case the filter is set hard below for speed in development
-filter = 5
+filter = 10
 list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
 print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
 for food in list_of_plottable_foods:
@@ -214,8 +214,16 @@ for food in list_of_plottable_foods:
 # here we will hard code the food to use
 #food = 'Crackers'
 food = 'Grits x 2'
-# food = 'Crackers and pb'
+food = 'Crackers and pb'
+food = 'pizza'
 # food = 'Ice cream'
+# food = 'eggs'
+# food = 'bacon'
+food = 'grits'
+# food = 'burger'
+food = 'cheese'
+# food = 'salad'
+food = 'crackers'
 food = food.lower()
 print(f'\nYou selected {food}.')
 
@@ -271,7 +279,6 @@ print('\nCombining all post prandial dataframes by med...')
 for name in pp_med_dict:
     plot_df = pd.DataFrame()
     dict_of_dfs = pp_med_dict.get(name)
-    print(dict_of_dfs)
     for k, v in dict_of_dfs.items():
         plot_df = plot_df.append(v)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
