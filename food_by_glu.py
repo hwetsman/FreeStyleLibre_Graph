@@ -228,14 +228,12 @@ food = 'cheese'
 # food = 'salad'
 food = 'crackers'
 food = food.lower()
-print(f'\nYou selected {food}.')
-
 
 # get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
 index_list = Get_Index_List(df,food)
 # index_list = df[df.Notes == food].index.tolist()
-print(f'There are {len(index_list)} entries in your index list')
+print(f'{food.title()} occurs {len(index_list)} times in the dataset')
 
 # iterate the index_list to create a list of post prandial dfs
 print('\nCreating post prandial dataframes...')
