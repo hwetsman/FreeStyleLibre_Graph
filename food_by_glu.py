@@ -160,6 +160,9 @@ def Feature_Eng(df):
     df = Combine_Glu(df)
     return df
 
+def Get_Index_List(df,food):
+    index_list = df[df.Notes == food].index.tolist()
+    return index_list
 
 time0 = time.time()
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
@@ -230,7 +233,8 @@ print(f'\nYou selected {food}.')
 
 # get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
-index_list = df[df.Notes == food].index.tolist()
+index_list = Get_Index_List(df,food)
+# index_list = df[df.Notes == food].index.tolist()
 print(f'There are {len(index_list)} entries in your index list')
 
 # iterate the index_list to create a list of post prandial dfs
