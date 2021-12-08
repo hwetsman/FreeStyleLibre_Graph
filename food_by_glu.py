@@ -167,17 +167,12 @@ for file in files:
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
-print(df['Device Timestamp'])
-
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'],format="%m-%d-%Y %I:%M %p")
-
-
 
 # ask for input for start date
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
 start_date = pd.to_datetime('2021-09-14')
-
 
 # Engineer Features
 print('\nDropping unneeded columns...')
@@ -189,11 +184,9 @@ df = Limit_to_Current(df, start_date)
 
 # save as interim
 df.to_csv('df_sorted.csv', index=False)
-print(df)
 
 # create food_dict
 food_dict = Create_Food_Dict(df)
-print(food_dict)
 
 # list of foods
 # at this point ask the user for the number of occurances they want to filter by
@@ -203,7 +196,7 @@ list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
 print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
 for food in list_of_plottable_foods:
     print(food)
-    
+
 # in web based iteration we would present this list to the user and let them choose in a drop down.
 # here we will hard code the food to use
 #food = 'Crackers'
@@ -223,6 +216,7 @@ dict_of_dfs = Create_Food_DFs(df, index_list)
 
 
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
+print('\nAdding meds to post prandial dataframes...')
 pp_med_dict = {}
 for med in meds:
     ind_med_dict = {}
@@ -230,20 +224,16 @@ for med in meds:
     pp_med_dict[name] = {}
     start = pd.to_datetime(med.get('start_date'))
     end = pd.to_datetime(med.get('end_date'))
-    print(name)
     for k, v in dict_of_dfs.items():
         update_dict = {}
         date_of_food = k.date()
-        print(date_of_food)
         if start <= date_of_food <= end:
             update_dict[k] = v
             ind_med_dict.update(update_dict)
     pp_med_dict[name].update(ind_med_dict)
 
-print(pp_med_dict)
-
 # normalize all glucose values to zero start
-print('\n\n')
+print('\nNormalizing glucose values...')
 for name in pp_med_dict:
     dict_of_dfs = pp_med_dict.get(name)
     for k, v in dict_of_dfs.items():
@@ -256,27 +246,21 @@ for name in pp_med_dict:
         dict_of_dfs[k] = nv
 
 # combine all 2hr pp dfs for a med and get mean glucose for every minute
+print('\nCombining all post prandial dataframes by med...')
 for name in pp_med_dict:
-    print('\n', name)
     plot_df = pd.DataFrame()
     dict_of_dfs = pp_med_dict.get(name)
     for k, v in dict_of_dfs.items():
         plot_df = plot_df.append(v)
-    print(plot_df)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     pp_med_dict[name] = plot_df
-    print(plot_df)
 
+print('\nGetting data to plot...')
 meds_to_plot = {}
 for name in pp_med_dict:
-    print('\n', name)
     df = pp_med_dict.get(name)
-    print(df)
     new_dict = df.to_dict()
-    print(new_dict)
     meds_to_plot[name] = new_dict
-print(meds_to_plot)
-
 
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
@@ -296,8 +280,6 @@ for med in meds_to_plot:
     x = xy_dict.keys()
     y = xy_dict.values()
     plt.plot(x, y, label=med)
-    print(x)
-    print(y)
 else:
     pass
 plt.legend()
