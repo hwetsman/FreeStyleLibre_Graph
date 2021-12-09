@@ -100,8 +100,11 @@ def Set_Meds(avg_df, meds):
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
-meds = [cholestiramine, metformin, CoQ_10]
-
+ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
+             'end_date': datetime.today().date().strftime('%Y-%m-%d')}
+meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
+# print(ezetimibe.get('end_date'))
+# 1/0
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
