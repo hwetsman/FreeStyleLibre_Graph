@@ -124,7 +124,7 @@ df.drop(['Device', 'Serial Number',
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
-df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'])
+df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
 # ask for input for start date
 # start_date = pd.to_datetime(
