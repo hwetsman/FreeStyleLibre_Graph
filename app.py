@@ -1,6 +1,9 @@
 
 
 from flask import Flask, render_template
+import matplotlib.pyplot as plt
+import io
+import base654
 
 app = Flask(__name__)
 
