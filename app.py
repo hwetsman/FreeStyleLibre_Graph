@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def input():
-    return render_template('input.html')
+    return render_template('input.html', title='FreeStyle libre Graphing',
+                           description='Add daily meds and graph your post prandial glucose')
 
 
 @ app.route("/graph")
