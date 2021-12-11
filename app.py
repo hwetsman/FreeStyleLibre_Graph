@@ -16,13 +16,11 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def upload():
-    if request.method == 'POST':
-        f = request.files['myfile']
-        f.save(f.filename)
-        return 'file uploaded successfully'
-
-
+# def upload():
+#     if request.method == 'POST':
+#         f = request.files['myfile']
+#         f.save(f.filename)
+#         return 'file uploaded successfully'
 def input():
     return render_template('input.html', title='FreeStyle libre Graphing',
                            description='Add daily meds and graph your post prandial glucose')
