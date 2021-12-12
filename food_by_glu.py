@@ -173,12 +173,12 @@ def Get_Index_List(df, food):
 time0 = time.time()
 
 # preparing for streamlit:
-# get names of meds into streamlit
+
 # get meds into streamlit
 # get start and end dates into streamlit
 # get cut off for foods into streamlit
 filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
-st.write('If you want to use your own data, click the button below.')
+st.write('If you want to use your own data, click the button below or continue on with the sample data.')
 st.button('Use your own data')
 st.write('Use the sliders and calendar inputs on the sidebar to filter the data.')
 # get most recent data
@@ -191,19 +191,16 @@ for file in files:
     print(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1)
     df = df.append(temp)
-
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
+# get start_date for df filtering
 start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
                                                   df['Device Timestamp'].min(), df['Device Timestamp'].max()))
 
-# ask for input for start date
-# start_date = pd.to_datetime(
-# input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
-#start_date = pd.to_datetime('2021-09-14')
 
+# get names of meds into streamlit
 med_names = []
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
@@ -211,21 +208,29 @@ CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'
 ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
              'end_date': datetime.today().date().strftime('%Y-%m-%d')}
 meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
-med1 = st.sidebar.text_input('Add Med1')
+med1 = {}
+med2 = {}
+med1_name = st.sidebar.text_input('Add Med1')
 med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', start_date,
                                                   start_date, df['Device Timestamp'].max()))
 med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', df['Device Timestamp'].max(),
                                                 start_date, df['Device Timestamp'].max()))
-med2 = st.sidebar.text_input('Add Med2')
+med2_name = st.sidebar.text_input('Add Med2')
 med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', start_date,
                                                   start_date, df['Device Timestamp'].max()))
 med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', df['Device Timestamp'].max(),
                                                 start_date, df['Device Timestamp'].max()))
 
-if med1 != '':
+if med1_name != '':
+    med1['name'] = med1_name
+    med1['start_date'] = med1_start
+    med1['end_date'] = med1_end
     med_names.append(med1)
-if med2 != '':
-    med_names.append(med2)
+if med2_name != '':
+    med2['name'] = med2_name
+    med2['start_date'] = med2_start
+    med2['end_date'] = med2_end
+
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
@@ -266,6 +271,7 @@ df = org_df
 # get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
 index_list = Get_Index_List(df, food)
+st.write(f"'{food}' occurs {len(index_list)} times in the dataset.")
 print(f'{food.title()} occurs {len(index_list)} times in the dataset')
 
 # iterate the index_list to create a list of post prandial dfs
