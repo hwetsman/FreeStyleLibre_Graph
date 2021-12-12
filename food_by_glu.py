@@ -202,12 +202,12 @@ start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df
 
 # get names of meds into streamlit
 med_names = []
-cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
-metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
-CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
-ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
-             'end_date': datetime.today().date().strftime('%Y-%m-%d')}
-meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
+# cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
+# metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
+# CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
+# ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
+#              'end_date': datetime.today().date().strftime('%Y-%m-%d')}
+# meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
 med1 = {}
 med2 = {}
 med1_name = st.sidebar.text_input('Add Med1')
@@ -230,7 +230,7 @@ if med2_name != '':
     med2['name'] = med2_name
     med2['start_date'] = med2_start
     med2['end_date'] = med2_end
-
+meds = [med1, med2]
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
