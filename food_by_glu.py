@@ -193,7 +193,7 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 # ask for input for start date
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
-start_date = pd.to_datetime('2021-09-14')
+start_date = pd.to_datetime('2021-09-01')
 
 # Engineer Features
 print('\nDropping unneeded columns...')
@@ -212,7 +212,7 @@ food_dict = Create_Food_Dict(df)
 # list of foods
 # at this point ask the user for the number of occurances they want to filter by
 # in this case the filter is set hard below for speed in development
-filter = 10
+filter = 20
 list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
 print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
 for food in list_of_plottable_foods:
