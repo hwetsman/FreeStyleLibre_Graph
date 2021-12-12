@@ -178,8 +178,9 @@ time0 = time.time()
 # get start and end dates into streamlit
 # get cut off for foods into streamlit
 filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
-
-
+st.write('If you want to use your own data, click the button below.')
+st.button('Use your own data')
+st.write('Use the sliders and calendar inputs on the sidebar to filter the data.')
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
