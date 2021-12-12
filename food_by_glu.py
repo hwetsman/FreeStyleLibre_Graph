@@ -12,6 +12,7 @@ To do: turn out put into a website
         allow input of start and stop dates for daily meds
         allow food graphs of 2 hour pp by meds
 """
+import streamlit as st
 import statsmodels.formula.api as sm
 import time
 import seaborn as sns
@@ -174,6 +175,15 @@ CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'
 ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
              'end_date': datetime.today().date().strftime('%Y-%m-%d')}
 meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
+
+
+# preparing for streamlit:
+# get names of meds into streamlit
+# get meds into streamlit
+# get start and end dates into streamlit
+# get cut off for foods into streamlit
+cutoff = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
+
 
 # get most recent data
 path = './most_recent_data/'
