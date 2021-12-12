@@ -171,13 +171,6 @@ def Get_Index_List(df, food):
 
 
 time0 = time.time()
-cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
-metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
-CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
-ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
-             'end_date': datetime.today().date().strftime('%Y-%m-%d')}
-meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
-
 
 # preparing for streamlit:
 # get names of meds into streamlit
@@ -209,6 +202,19 @@ start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
 #start_date = pd.to_datetime('2021-09-14')
+
+
+cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
+metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
+CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
+ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
+             'end_date': datetime.today().date().strftime('%Y-%m-%d')}
+meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
+med1 = st.sidebar.text_input('Add a Medicine')
+med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
+                                                  df['Device Timestamp'].min(), df['Device Timestamp'].max()))
+med1_end = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].max(),
+                                                df['Device Timestamp'].min(), df['Device Timestamp'].max()))
 
 # Engineer Features
 print('\nDropping unneeded columns...')
