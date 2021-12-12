@@ -12,6 +12,8 @@ To do: turn out put into a website
         allow input of start and stop dates for daily meds
         allow food graphs of 2 hour pp by meds
 """
+import pandas as pd
+import matplotlib.pyplot as plt
 import streamlit as st
 import statsmodels.formula.api as sm
 import time
@@ -20,8 +22,8 @@ from datetime import datetime, timedelta
 import numpy as np
 import os
 from matplotlib.pyplot import figure
-import matplotlib.pyplot as plt
-import pandas as pd
+import matplotlib
+matplotlib.use('TkAgg')
 pd.options.mode.chained_assignment = None
 
 pd.set_option('display.max_columns', 500)
@@ -202,8 +204,7 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 
 start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
                                                   df['Device Timestamp'].min(), df['Device Timestamp'].max()))
-print(start_date)
-print(type(start_date))
+
 # ask for input for start date
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
@@ -229,21 +230,21 @@ food_dict = Create_Food_Dict(df)
 # filter = 10
 list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
 print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
-st.sidebar.select_slider('Available Foods', list_of_plottable_foods)
-for food in list_of_plottable_foods:
-    print(food)
+food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lower()
+# for food in list_of_plottable_foods:
+#     print(food)
 
 # in web based iteration we would present this list to the user and let them choose in a drop down.
 # here we will hard code the food to use
 
-food = 'Grits x 2'
-food = 'Crackers and pb'
-food = 'pizza'
-food = 'grits'
-food = 'cheese'
-food = 'crackers'
-food = food.lower()
-list_of_plotable_foods = ['grits x 2', 'crackers and pb', 'pizza', 'grits', 'cheese', 'crackers']
+# food = 'Grits x 2'
+# food = 'Crackers and pb'
+# food = 'pizza'
+# food = 'grits'
+# food = 'cheese'
+# food = 'crackers'
+# food = food.lower()
+# list_of_plotable_foods = ['grits x 2', 'crackers and pb', 'pizza', 'grits', 'cheese', 'crackers']
 # for food in list_of_plotable_foods:
 df = org_df
 # get dfs of 2 hour post prandial periods after eating 'food'
@@ -340,18 +341,28 @@ for med in meds_to_plot:
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
 # plot them out with 2 hours on the x axis and a line for each med tracing out
+# fig, ax = plt.subplots()
+# print(fig)
+# for med in meds_to_plot:
+#     xy_dict = meds_to_plot.get(med)
+#     x = xy_dict.keys()
+#     y = xy_dict.values()
+#     st.line_chart(x, y)
+#     # ax.plot(x, y, label=med)
+# else:
+#     pass
+# fig.legend()
+# fig.title(f"2-hr Glucose Pattern After '{food}'")
+# fig.xlabel('Minutes')
+# fig.ylabel('Glucose')
+# plt.show()
+plot_data = pd.DataFrame()
 for med in meds_to_plot:
     xy_dict = meds_to_plot.get(med)
-    x = xy_dict.keys()
-    y = xy_dict.values()
-    plt.plot(x, y, label=med)
-else:
-    pass
-plt.legend()
-plt.title(f"2-hr Glucose Pattern After '{food}'")
-plt.xlabel('Minutes')
-plt.ylabel('Glucose')
-plt.show()
-
-
-#
+    index = xy_dict.keys()
+    temp_df = pd.DataFrame(xy_dict.values(), index=index, columns=[med])
+    print(temp_df.head())
+    plot_data = pd.concat([plot_data, temp_df], axis=1)
+    print(plot_data.head())
+print(plot_data)
+st.line_chart(plot_data)
