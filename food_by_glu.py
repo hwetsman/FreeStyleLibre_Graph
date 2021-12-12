@@ -200,6 +200,10 @@ for file in files:
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
+st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
+                      df['Device Timestamp'].min(), df['Device Timestamp'].max())
+st.sidebar.date_input('End Date for Filtering', df['Device Timestamp'].max(),
+                      df['Device Timestamp'].min(), df['Device Timestamp'].max())
 # ask for input for start date
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
