@@ -199,6 +199,10 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
                                                   df['Device Timestamp'].min(), df['Device Timestamp'].max()))
 
+# Engineer Features
+print('\nDropping unneeded columns...')
+df = Feature_Eng(df)
+
 
 # get names of meds into streamlit
 med_names = []
@@ -231,9 +235,26 @@ if med2_name != '':
     med2['start_date'] = med2_start
     med2['end_date'] = med2_end
 meds = [med1, med2]
-# Engineer Features
-print('\nDropping unneeded columns...')
-df = Feature_Eng(df)
+# create med_df
+
+
+def Create_Med_DF(df, med):
+    start_date = med.get('start_date')
+    end_date = med.get('end_date')
+    df.set_index('DateTime', inplace=True, drop=True)
+    df = df[df.index >= start_date]
+    df = df[df.index <= start_date]
+    df.reset_index(inplace=True)
+    df.drop_duplicates(inplace=True)
+    df = df.sort_values(by='DateTime', ascending=True)
+    return df
+
+
+med1_df = Create_Med_DF(df, med1)
+med2_df = Create_Med_Df(df, med2)
+print(med1_df)
+1/0
+
 
 # Limit records
 print('\nDropping and organizing records...')
