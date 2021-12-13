@@ -196,7 +196,11 @@ time0 = time.time()
 # get cut off for foods into streamlit
 filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
 st.write('If you want to use your own data, click the button below or continue on with the sample data.')
-st.button('Use your own data')
+input_needed = st.button('Use your own data')
+if input_needed:
+    uploaded_file = st.file_uploader("Choose a file")
+
+
 st.write('Use the sliders and calendar inputs on the sidebar to filter the data. Scroll down the sidebar to see them all.')
 # get most recent data
 path = './most_recent_data/'
@@ -259,22 +263,42 @@ if med2_name != '':
     med2['end_date'] = med2_end
 meds = [med1, med2]
 
+
+# we are not creating good med_dfs
+
+
+1/0
 # create med_df
 med1_df = Create_Med_DF(df.copy(), med1)
+print('med1 df', med1_df)
 med2_df = Create_Med_DF(df.copy(), med2)
 
+
+# now we have two med_dfs and we need to take each through the process
+# of getting 2 hour post prandials after each occurance of food
 
 # save as interim
 df.to_csv('df_sorted.csv', index=False)
 org_df = df
 # create food_dict
 food_dict = Create_Food_Dict(df)
+print(med1_df)
+med1_food_dict = Create_Food_Dict(med1_df)
+print(med1_food_dict)
+med2_food_dict = Create_Food_Dict(med2_df)
 
 # list of foods
 # at this point ask the user for the number of occurances they want to filter by
 # in this case the filter is set hard below for speed in development
 # filter = 10
-list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
+med1_plottable_foods = Trim_Food_Dict(med1_food_dict, filter)
+print(med1_plottable_foods)
+med2_plottable_foods = Trim_Food_Dict(med2_food_dict, filter)
+print(med2_plottable_foods)
+# list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
+list_of_plottable_foods = [x for x in med1_plottable_foods if x in med2_plottable_foods]
+print(list_of_plottable_foods)
+
 print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
 food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lower()
 # for food in list_of_plottable_foods:
