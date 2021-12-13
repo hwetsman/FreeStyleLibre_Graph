@@ -225,7 +225,7 @@ print(df.head())
 print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
 print(df.shape)
-1/0
+
 # get names of meds into streamlit
 med_names = []
 # cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
@@ -330,37 +330,65 @@ df = org_df
 # get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
 index_list = Get_Index_List(df, food)
+med1_index_list = Get_Index_List(med1_df, food)
+med2_index_list = Get_Index_List(med2_df, food)
 st.write(f"'{food}' occurs {len(index_list)} times in the dataset.")
-print(f'{food.title()} occurs {len(index_list)} times in the dataset')
+# print(f'{food.title()} occurs {len(index_list)} times in the dataset')
 
 # iterate the index_list to create a list of post prandial dfs
 print('\nCreating post prandial dataframes...')
 dict_of_dfs = Create_Food_DFs(df, index_list)
+med1_dict_of_dfs = Create_Food_DFs(med1_df, med1_index_list)
+med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
+
+
+# for each med_dict_of_dfs take each df and normalize both glucose and min
+# then combine the normalized dfs into one for each med
+# plot them
+
 
 # want to add an interation of all the indeces
 # to create a no_meds dict of dfs to add to pp_med_dict latter
 
 # iterate dict_of_dfs and create med_dicts of 2 hr pp dfs
-print('\nAdding meds to post prandial dataframes...')
-pp_med_dict = {}
-for med in meds:
-    ind_med_dict = {}
-    name = med.get('name')
+# print('\nAdding meds to post prandial dataframes...')
+# pp_med_dict = {}
+# for med in meds:
+#     ind_med_dict = {}
+#     name = med.get('name')
+#
+#     start = pd.to_datetime(med.get('start_date')).date()
+#     end = pd.to_datetime(med.get('end_date')).date()
+#     for k, v in dict_of_dfs.items():
+#         update_dict = {}
+#         date_of_food = k.date()
+#         if start <= date_of_food <= end:
+#             update_dict[k] = v
+#             ind_med_dict.update(update_dict)
+#
+#     if len(ind_med_dict) >= 1:
+#         pp_med_dict[name] = {}
+#         pp_med_dict[name].update(ind_med_dict)
+#     else:
+#         pass
+print(med1_dict_of_dfs)
 
-    start = pd.to_datetime(med.get('start_date')).date()
-    end = pd.to_datetime(med.get('end_date')).date()
+
+def Normalize_DFs(dict_of_dfs):
     for k, v in dict_of_dfs.items():
-        update_dict = {}
-        date_of_food = k.date()
-        if start <= date_of_food <= end:
-            update_dict[k] = v
-            ind_med_dict.update(update_dict)
+        start_time = v['DateTime'].tolist()[0]
+        start = v['Glucose'].tolist()[0]
+        v.Glucose = (v.Glucose - start).astype(int)
+        v['Time_Delta'] = v.DateTime - start_time
+        v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
+        nv = v[['Minutes', 'Glucose']]
+        dict_of_dfs[k] = nv
+    return dict_of_dfs
 
-    if len(ind_med_dict) >= 1:
-        pp_med_dict[name] = {}
-        pp_med_dict[name].update(ind_med_dict)
-    else:
-        pass
+
+med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
+print(med1_dict_of_dfs)
+1/0
 
 # normalize all glucose values to zero start
 print('\nNormalizing glucose values...')
