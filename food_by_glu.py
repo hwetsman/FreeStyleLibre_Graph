@@ -71,9 +71,9 @@ def Trim_Food_Dict(food_dict, occurances):
     return list_of_plottable_foods
 
 
-def Limit_to_Current(df, start_date):
+def Limit_to_Current(df):
     df.set_index('DateTime', inplace=True, drop=True)
-    df = df[df.index >= start_date]
+    # df = df[df.index >= start_date]
     df.reset_index(inplace=True)
     df.drop_duplicates(inplace=True)
     df = df.sort_values(by='DateTime', ascending=True)
@@ -196,8 +196,8 @@ print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
 # get start_date for df filtering
-start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
-                                                  df['Device Timestamp'].min(), df['Device Timestamp'].max()))
+# start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
+#                                                   df['Device Timestamp'].min(), df['Device Timestamp'].max()))
 
 # Engineer Features
 print('\nDropping unneeded columns...')
@@ -215,15 +215,15 @@ med_names = []
 med1 = {}
 med2 = {}
 med1_name = st.sidebar.text_input('Add Med1')
-med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', start_date,
-                                                  start_date, df['DateTime'].max()))
+med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', df['DateTime'].min(),
+                                                  df['DateTime'].min(), df['DateTime'].max()))
 med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', df['DateTime'].max(),
-                                                start_date, df['DateTime'].max()))
+                                                df['DateTime'].min(), df['DateTime'].max()))
 med2_name = st.sidebar.text_input('Add Med2')
-med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', start_date,
-                                                  start_date, df['DateTime'].max()))
+med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', df['DateTime'].min(),
+                                                  df['DateTime'].min(), df['DateTime'].max()))
 med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', df['DateTime'].max(),
-                                                start_date, df['DateTime'].max()))
+                                                df['DateTime'].min(), df['DateTime'].max()))
 
 if med1_name != '':
     med1['name'] = med1_name
@@ -262,7 +262,7 @@ print(med1_df)
 
 # Limit records
 print('\nDropping and organizing records...')
-df = Limit_to_Current(df, start_date)
+df = Limit_to_Current(df)
 
 # save as interim
 df.to_csv('df_sorted.csv', index=False)
