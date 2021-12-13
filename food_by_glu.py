@@ -190,12 +190,6 @@ def Create_Med_DF(p_df, med):
 
 time0 = time.time()
 
-# preparing for streamlit:
-
-# get meds into streamlit
-# get start and end dates into streamlit
-# get cut off for foods into streamlit
-# filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
 st.write('If you want to use your own data, click the button below or continue on with the sample data.')
 input_needed = st.button('Use your own data')
 if input_needed:
@@ -205,14 +199,17 @@ if input_needed:
 st.write('Use the sliders and calendar inputs on the sidebar to filter the data. Scroll down the sidebar to see them all.')
 # get most recent data
 path = './most_recent_data/'
-files = os.listdir(path)
+# files = os.listdir(path)
+file = os.listdir(path)[0]
+print(file)
 
 # create df
-df = pd.DataFrame()
-for file in files:
-    print(f'\nLoading file {file}...')
-    temp = pd.read_csv(path+file, header=1)
-    df = df.append(temp)
+# df = pd.DataFrame()
+# for file in files:
+#     print(f'\nLoading file {file}...')
+df = pd.read_csv(path+file, header=1)
+# df = df.append(temp)
+print(df.head())
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
@@ -228,7 +225,7 @@ print(df.head())
 print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
 print(df.shape)
-
+1/0
 # get names of meds into streamlit
 med_names = []
 # cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
