@@ -236,14 +236,14 @@ if med2_name != '':
     med2['start_date'] = med2_start
     med2['end_date'] = med2_end
 meds = [med1, med2]
+
+
 # create med_df
 
 
 def Create_Med_DF(p_df, med):
     start_date = med.get('start_date')
-    print(type(start_date))
     end_date = med.get('end_date')
-    print(type(end_date))
     p_df.set_index('DateTime', inplace=True, drop=True)
     p_df = p_df[p_df.index >= start_date]
     p_df = p_df[p_df.index <= start_date]
@@ -254,18 +254,10 @@ def Create_Med_DF(p_df, med):
     return p_df
 
 
-print('before med_df')
-print(df.head())
-print('med1_df')
 med1_df = Create_Med_DF(df.copy(), med1)
-print(df.head())
-print(df.iloc[0, 0])
-print(type(df.iloc[0, 0]))
-print('med2_df')
 med2_df = Create_Med_DF(df.copy(), med2)
 
 print(med1_df)
-1/0
 
 
 # Limit records
