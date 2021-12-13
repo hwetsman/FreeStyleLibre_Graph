@@ -171,8 +171,12 @@ def Get_Index_List(df, food):
 
 
 def Create_Med_DF(p_df, med):
+    print(p_df.head())
+    print(med)
     start_date = med.get('start_date')
+    print(start_date, type(start_date))
     end_date = med.get('end_date')
+    print(end_date, type(end_date))
     p_df.set_index('DateTime', inplace=True, drop=True)
     p_df = p_df[p_df.index >= start_date]
     p_df = p_df[p_df.index <= start_date]
@@ -209,10 +213,16 @@ for file in files:
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
+
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
 print(df.head())
+
+# Limit records
+print('\nDropping and organizing records...')
+df = Dedup_and_Sort(df)
+print(df.shape)
 
 # get names of meds into streamlit
 med_names = []
@@ -253,10 +263,6 @@ meds = [med1, med2]
 med1_df = Create_Med_DF(df.copy(), med1)
 med2_df = Create_Med_DF(df.copy(), med2)
 
-
-# Limit records
-print('\nDropping and organizing records...')
-df = Dedup_and_Sort(df)
 
 # save as interim
 df.to_csv('df_sorted.csv', index=False)
