@@ -293,20 +293,26 @@ print(med1_df)
 med1_food_dict = Create_Food_Dict(med1_df)
 print(med1_food_dict)
 med2_food_dict = Create_Food_Dict(med2_df)
-1/0
+print(med2_food_dict)
+
 # list of foods
 # at this point ask the user for the number of occurances they want to filter by
 # in this case the filter is set hard below for speed in development
 # filter = 10
-med1_plottable_foods = Trim_Food_Dict(med1_food_dict, filter)
-print(med1_plottable_foods)
-med2_plottable_foods = Trim_Food_Dict(med2_food_dict, filter)
-print(med2_plottable_foods)
+# med1_plottable_foods = Trim_Food_Dict(med1_food_dict, filter)
+# print(med1_plottable_foods)
+# med2_plottable_foods = Trim_Food_Dict(med2_food_dict, filter)
+# print(med2_plottable_foods)
 # list_of_plottable_foods = Trim_Food_Dict(food_dict, filter)
-list_of_plottable_foods = [x for x in med1_plottable_foods if x in med2_plottable_foods]
+med1_list = [x for x in med1_food_dict]
+med2_list = [x for x in med2_food_dict]
+print(med1_list)
+print(med2_list)
+
+list_of_plottable_foods = [x for x in med1_list if x in med2_list]
 print(list_of_plottable_foods)
 
-print(f'These foods are in the database more than {filter} times and so may be worth plotting:')
+print(f'These foods are in the database for both meds and so may be worth plotting:')
 food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lower()
 # for food in list_of_plottable_foods:
 #     print(food)
