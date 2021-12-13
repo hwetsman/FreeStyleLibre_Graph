@@ -180,7 +180,7 @@ time0 = time.time()
 filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
 st.write('If you want to use your own data, click the button below or continue on with the sample data.')
 st.button('Use your own data')
-st.write('Use the sliders and calendar inputs on the sidebar to filter the data.')
+st.write('Use the sliders and calendar inputs on the sidebar to filter the data. Scroll down the sidebar to see them all.')
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
