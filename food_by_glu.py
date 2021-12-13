@@ -195,7 +195,7 @@ time0 = time.time()
 # get meds into streamlit
 # get start and end dates into streamlit
 # get cut off for foods into streamlit
-filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
+# filter = st.sidebar.slider('Cutoff for Food', 1, 100, 10)
 st.write('If you want to use your own data, click the button below or continue on with the sample data.')
 input_needed = st.button('Use your own data')
 if input_needed:
