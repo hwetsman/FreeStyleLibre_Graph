@@ -386,66 +386,85 @@ def Normalize_DFs(dict_of_dfs):
     return dict_of_dfs
 
 
+# Normalize Med_dfs for glucose and time
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
+med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 print(med1_dict_of_dfs)
-1/0
 
-# normalize all glucose values to zero start
-print('\nNormalizing glucose values...')
-for name in pp_med_dict:
-    dict_of_dfs = pp_med_dict.get(name)
 
+# # normalize all glucose values to zero start
+# print('\nNormalizing glucose values...')
+# for name in pp_med_dict:
+#     dict_of_dfs = pp_med_dict.get(name)
+#
+#     for k, v in dict_of_dfs.items():
+#         start_time = v['DateTime'].tolist()[0]
+#         start = v['Glucose'].tolist()[0]
+#         v.Glucose = (v.Glucose - start).astype(int)
+#         v['Time_Delta'] = v.DateTime - start_time
+#         v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
+#         nv = v[['Minutes', 'Glucose']]
+#         dict_of_dfs[k] = nv
+
+def Combine_Med_DFs(dict_of_dfs):
+    print(dict_of_dfs)
+    plot_df = pd.DataFrame()
     for k, v in dict_of_dfs.items():
-        start_time = v['DateTime'].tolist()[0]
-        start = v['Glucose'].tolist()[0]
-        v.Glucose = (v.Glucose - start).astype(int)
-        v['Time_Delta'] = v.DateTime - start_time
-        v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
-        nv = v[['Minutes', 'Glucose']]
-        dict_of_dfs[k] = nv
+        print(v)
+        plot_df = plot_df.append(v)
+        print(plot_df)
+    plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
+    print(plot_df)
+    return plot_df
+
+
+med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
+print(med1_plot_df)
+
+med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
 
 # combine all 2hr pp dfs for a med and get mean glucose for every minute
-print('\nCombining all post prandial dataframes by med...')
-for name in pp_med_dict:
-    plot_df = pd.DataFrame()
-    dict_of_dfs = pp_med_dict.get(name)
-    for k, v in dict_of_dfs.items():
-        plot_df = plot_df.append(v)
-    plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
-    pp_med_dict[name] = plot_df
+# print('\nCombining all post prandial dataframes by med...')
+# for name in pp_med_dict:
+#     plot_df = pd.DataFrame()
+#     dict_of_dfs = pp_med_dict.get(name)
+#     for k, v in dict_of_dfs.items():
+#         plot_df = plot_df.append(v)
+#     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
+#     pp_med_dict[name] = plot_df
 
 # create ols cols in dfs
-for name in pp_med_dict:
-    plot_df = pd.DataFrame(pp_med_dict.get(name))
-    plot_df.columns = ['Glu']
-    plot_df.reset_index(drop=False, inplace=True)
-    plot_df = Create_Model(plot_df)
-    plot_df.set_index('Minutes', inplace=True, drop=True)
-    pp_med_dict[name] = plot_df
+# for name in pp_med_dict:
+#     plot_df = pd.DataFrame(pp_med_dict.get(name))
+#     plot_df.columns = ['Glu']
+#     plot_df.reset_index(drop=False, inplace=True)
+#     plot_df = Create_Model(plot_df)
+#     plot_df.set_index('Minutes', inplace=True, drop=True)
+#     pp_med_dict[name] = plot_df
 
 # for name in pp_med_dict:
 #     print(name)
 #     print(pp_med_dict.get(name))
 #     print()
 
-print('\nGetting data to plot...')
-meds_to_plot = {}
-for name in pp_med_dict:
-    df = pp_med_dict.get(name)
-    # df.drop('Glu', axis=1, inplace=True)
-    new_dict = df.to_dict().get('Est')
-    meds_to_plot[name] = new_dict
+# print('\nGetting data to plot...')
+# meds_to_plot = {}
+# for name in pp_med_dict:
+#     df = pp_med_dict.get(name)
+#     # df.drop('Glu', axis=1, inplace=True)
+#     new_dict = df.to_dict().get('Est')
+#     meds_to_plot[name] = new_dict
 
 # normalize the meds_to_plot dicts:
-for med in meds_to_plot:
-    print(med)
-    transformed_dict = {}
-    raw_dict = meds_to_plot.get(med)
-    start = raw_dict.get(0)
-    for k, v in raw_dict.items():
-        new_value = v-start
-        transformed_dict[k] = new_value
-    meds_to_plot[med] = transformed_dict
+# for med in meds_to_plot:
+#     print(med)
+#     transformed_dict = {}
+#     raw_dict = meds_to_plot.get(med)
+#     start = raw_dict.get(0)
+#     for k, v in raw_dict.items():
+#         new_value = v-start
+#         transformed_dict[k] = new_value
+#     meds_to_plot[med] = transformed_dict
 
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
@@ -466,12 +485,20 @@ print(f'This took {time1-time0} seconds.')
 # fig.ylabel('Glucose')
 # plt.show()
 plot_data = pd.DataFrame()
-for med in meds_to_plot:
-    xy_dict = meds_to_plot.get(med)
-    index = xy_dict.keys()
-    temp_df = pd.DataFrame(xy_dict.values(), index=index, columns=[med])
-    print(temp_df.head())
-    plot_data = pd.concat([plot_data, temp_df], axis=1)
-    print(plot_data.head())
+# st.line_chart(med2_plot_df)
+plot_data = pd.concat([plot_data, med1_plot_df], axis=1)
+# plot_data.columns = [med1_name]
+plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
+plot_data.columns = [med1_name, med2_name]
 print(plot_data)
 st.line_chart(plot_data)
+
+# for med in meds_to_plot:
+#     xy_dict = meds_to_plot.get(med)
+#     index = xy_dict.keys()
+#     temp_df = pd.DataFrame(xy_dict.values(), index=index, columns=[med])
+#     print(temp_df.head())
+#     plot_data = pd.concat([plot_data, temp_df], axis=1)
+#     print(plot_data.head())
+# print(plot_data)
+# st.line_chart(plot_data)
