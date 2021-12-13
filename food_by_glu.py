@@ -170,6 +170,19 @@ def Get_Index_List(df, food):
     return index_list
 
 
+def Create_Med_DF(p_df, med):
+    start_date = med.get('start_date')
+    end_date = med.get('end_date')
+    p_df.set_index('DateTime', inplace=True, drop=True)
+    p_df = p_df[p_df.index >= start_date]
+    p_df = p_df[p_df.index <= start_date]
+    p_df.reset_index(inplace=True)
+    p_df.drop_duplicates(inplace=True)
+    df['DateTime'] = pd.to_datetime(df['DateTime'], format="%m-%d-%Y %I:%M %p")
+    p_df = p_df.sort_values(by='DateTime', ascending=True)
+    return p_df
+
+
 time0 = time.time()
 
 # preparing for streamlit:
@@ -191,13 +204,10 @@ for file in files:
     print(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1)
     df = df.append(temp)
+
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
-
-# get start_date for df filtering
-# start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df['Device Timestamp'].min(),
-#                                                   df['Device Timestamp'].min(), df['Device Timestamp'].max()))
 
 # Engineer Features
 print('\nDropping unneeded columns...')
@@ -214,11 +224,13 @@ med_names = []
 # meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
 med1 = {}
 med2 = {}
+
 med1_name = st.sidebar.text_input('Add Med1')
 med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', df['DateTime'].min(),
                                                   df['DateTime'].min(), df['DateTime'].max()))
 med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', df['DateTime'].max(),
                                                 df['DateTime'].min(), df['DateTime'].max()))
+
 med2_name = st.sidebar.text_input('Add Med2')
 med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', df['DateTime'].min(),
                                                   df['DateTime'].min(), df['DateTime'].max()))
@@ -239,19 +251,6 @@ meds = [med1, med2]
 
 
 # create med_df
-
-
-def Create_Med_DF(p_df, med):
-    start_date = med.get('start_date')
-    end_date = med.get('end_date')
-    p_df.set_index('DateTime', inplace=True, drop=True)
-    p_df = p_df[p_df.index >= start_date]
-    p_df = p_df[p_df.index <= start_date]
-    p_df.reset_index(inplace=True)
-    p_df.drop_duplicates(inplace=True)
-    df['DateTime'] = pd.to_datetime(df['DateTime'], format="%m-%d-%Y %I:%M %p")
-    p_df = p_df.sort_values(by='DateTime', ascending=True)
-    return p_df
 
 
 med1_df = Create_Med_DF(df.copy(), med1)
