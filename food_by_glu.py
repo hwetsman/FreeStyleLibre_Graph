@@ -202,7 +202,7 @@ start_date = pd.to_datetime(st.sidebar.date_input('Start Date for Filtering', df
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
-
+print(df.head())
 
 # get names of meds into streamlit
 med_names = []
@@ -216,14 +216,14 @@ med1 = {}
 med2 = {}
 med1_name = st.sidebar.text_input('Add Med1')
 med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', start_date,
-                                                  start_date, df['Device Timestamp'].max()))
-med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', df['Device Timestamp'].max(),
-                                                start_date, df['Device Timestamp'].max()))
+                                                  start_date, df['DateTime'].max()))
+med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', df['DateTime'].max(),
+                                                start_date, df['DateTime'].max()))
 med2_name = st.sidebar.text_input('Add Med2')
 med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', start_date,
-                                                  start_date, df['Device Timestamp'].max()))
-med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', df['Device Timestamp'].max(),
-                                                start_date, df['Device Timestamp'].max()))
+                                                  start_date, df['DateTime'].max()))
+med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', df['DateTime'].max(),
+                                                start_date, df['DateTime'].max()))
 
 if med1_name != '':
     med1['name'] = med1_name
@@ -231,6 +231,7 @@ if med1_name != '':
     med1['end_date'] = med1_end
     med_names.append(med1)
 if med2_name != '':
+    print(med2_name)
     med2['name'] = med2_name
     med2['start_date'] = med2_start
     med2['end_date'] = med2_end
@@ -238,20 +239,31 @@ meds = [med1, med2]
 # create med_df
 
 
-def Create_Med_DF(df, med):
+def Create_Med_DF(p_df, med):
     start_date = med.get('start_date')
+    print(type(start_date))
     end_date = med.get('end_date')
-    df.set_index('DateTime', inplace=True, drop=True)
-    df = df[df.index >= start_date]
-    df = df[df.index <= start_date]
-    df.reset_index(inplace=True)
-    df.drop_duplicates(inplace=True)
-    df = df.sort_values(by='DateTime', ascending=True)
-    return df
+    print(type(end_date))
+    p_df.set_index('DateTime', inplace=True, drop=True)
+    p_df = p_df[p_df.index >= start_date]
+    p_df = p_df[p_df.index <= start_date]
+    p_df.reset_index(inplace=True)
+    p_df.drop_duplicates(inplace=True)
+    df['DateTime'] = pd.to_datetime(df['DateTime'], format="%m-%d-%Y %I:%M %p")
+    p_df = p_df.sort_values(by='DateTime', ascending=True)
+    return p_df
 
 
-med1_df = Create_Med_DF(df, med1)
-med2_df = Create_Med_Df(df, med2)
+print('before med_df')
+print(df.head())
+print('med1_df')
+med1_df = Create_Med_DF(df.copy(), med1)
+print(df.head())
+print(df.iloc[0, 0])
+print(type(df.iloc[0, 0]))
+print('med2_df')
+med2_df = Create_Med_DF(df.copy(), med2)
+
 print(med1_df)
 1/0
 
