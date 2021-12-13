@@ -171,15 +171,16 @@ def Get_Index_List(df, food):
 
 
 def Create_Med_DF(p_df, med):
+    print('\nCreating med df...')
     print(p_df.head())
     print(med)
-    start_date = med.get('start_date')
+    start_date = pd.to_datetime(med.get('start_date'), format="%m-%d-%Y %I:%M %p")
     print(start_date, type(start_date))
     end_date = med.get('end_date')
     print(end_date, type(end_date))
     p_df.set_index('DateTime', inplace=True, drop=True)
     p_df = p_df[p_df.index >= start_date]
-    p_df = p_df[p_df.index <= start_date]
+    p_df = p_df[p_df.index <= end_date]
     p_df.reset_index(inplace=True)
     p_df.drop_duplicates(inplace=True)
     df['DateTime'] = pd.to_datetime(df['DateTime'], format="%m-%d-%Y %I:%M %p")
@@ -265,12 +266,18 @@ meds = [med1, med2]
 
 
 # we are not creating good med_dfs
+print('\ndf')
+print(df)
+copy = df.copy()
+print('copy')
+print(copy)
 
 
-1/0
 # create med_df
 med1_df = Create_Med_DF(df.copy(), med1)
-print('med1 df', med1_df)
+print('med1_df')
+print(med1_df)
+
 med2_df = Create_Med_DF(df.copy(), med2)
 
 
@@ -286,7 +293,7 @@ print(med1_df)
 med1_food_dict = Create_Food_Dict(med1_df)
 print(med1_food_dict)
 med2_food_dict = Create_Food_Dict(med2_df)
-
+1/0
 # list of foods
 # at this point ask the user for the number of occurances they want to filter by
 # in this case the filter is set hard below for speed in development
