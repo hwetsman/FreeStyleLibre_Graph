@@ -71,10 +71,10 @@ def Trim_Food_Dict(food_dict, occurances):
     return list_of_plottable_foods
 
 
-def Limit_to_Current(df):
-    df.set_index('DateTime', inplace=True, drop=True)
+def Dedup_and_Sort(df):
+    # df.set_index('DateTime', inplace=True, drop=True)
     # df = df[df.index >= start_date]
-    df.reset_index(inplace=True)
+    # df.reset_index(inplace=True)
     df.drop_duplicates(inplace=True)
     df = df.sort_values(by='DateTime', ascending=True)
     return df
@@ -249,19 +249,14 @@ if med2_name != '':
     med2['end_date'] = med2_end
 meds = [med1, med2]
 
-
 # create med_df
-
-
 med1_df = Create_Med_DF(df.copy(), med1)
 med2_df = Create_Med_DF(df.copy(), med2)
-
-print(med1_df)
 
 
 # Limit records
 print('\nDropping and organizing records...')
-df = Limit_to_Current(df)
+df = Dedup_and_Sort(df)
 
 # save as interim
 df.to_csv('df_sorted.csv', index=False)
