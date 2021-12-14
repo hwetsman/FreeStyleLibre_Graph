@@ -228,17 +228,12 @@ file = os.listdir(path)[0]
 print(file)
 
 # create df
-# df = pd.DataFrame()
-# for file in files:
-#     print(f'\nLoading file {file}...')
 df = pd.read_csv(path+file, header=1)
-# df = df.append(temp)
 print(df.head())
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
-
 
 # Engineer Features
 print('\nDropping unneeded columns...')
@@ -345,18 +340,14 @@ med1_dict_of_dfs = Create_Food_DFs(med1_df, med1_index_list)
 med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
 print(med1_dict_of_dfs)
 
-
 # Normalize Med_dfs for glucose and time
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
 med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 print(med1_dict_of_dfs)
 
-
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
-print(med1_plot_df)
-
 med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
-
+print(med1_plot_df)
 
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
