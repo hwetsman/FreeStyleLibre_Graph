@@ -188,6 +188,30 @@ def Create_Med_DF(p_df, med):
     return p_df
 
 
+def Combine_Med_DFs(dict_of_dfs):
+    print(dict_of_dfs)
+    plot_df = pd.DataFrame()
+    for k, v in dict_of_dfs.items():
+        print(v)
+        plot_df = plot_df.append(v)
+        print(plot_df)
+    plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
+    print(plot_df)
+    return plot_df
+
+
+def Normalize_DFs(dict_of_dfs):
+    for k, v in dict_of_dfs.items():
+        start_time = v['DateTime'].tolist()[0]
+        start = v['Glucose'].tolist()[0]
+        v.Glucose = (v.Glucose - start).astype(int)
+        v['Time_Delta'] = v.DateTime - start_time
+        v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
+        nv = v[['Minutes', 'Glucose']]
+        dict_of_dfs[k] = nv
+    return dict_of_dfs
+
+
 time0 = time.time()
 
 st.write('If you want to use your own data, click the button below or continue on with the sample data.')
@@ -322,34 +346,10 @@ med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
 print(med1_dict_of_dfs)
 
 
-def Normalize_DFs(dict_of_dfs):
-    for k, v in dict_of_dfs.items():
-        start_time = v['DateTime'].tolist()[0]
-        start = v['Glucose'].tolist()[0]
-        v.Glucose = (v.Glucose - start).astype(int)
-        v['Time_Delta'] = v.DateTime - start_time
-        v['Minutes'] = (v.Time_Delta.dt.seconds/60).astype(int)
-        nv = v[['Minutes', 'Glucose']]
-        dict_of_dfs[k] = nv
-    return dict_of_dfs
-
-
 # Normalize Med_dfs for glucose and time
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
 med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 print(med1_dict_of_dfs)
-
-
-def Combine_Med_DFs(dict_of_dfs):
-    print(dict_of_dfs)
-    plot_df = pd.DataFrame()
-    for k, v in dict_of_dfs.items():
-        print(v)
-        plot_df = plot_df.append(v)
-        print(plot_df)
-    plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
-    print(plot_df)
-    return plot_df
 
 
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
