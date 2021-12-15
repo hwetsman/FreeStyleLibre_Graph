@@ -360,13 +360,13 @@ def Create_Model(df, med):
 
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
 med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
-print(med1_plot_df.head(1))
+print(med1_plot_df)
 
 med1_plot_df = Create_Model(med1_plot_df, med1_name)
 print(med1_plot_df.head(1))
 med2_plot_df = Create_Model(med2_plot_df, med2_name)
-print(med2_plot_df.head(1))
-1/0
+print(med2_plot_df)
+
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
 # plot them out with 2 hours on the x axis and a line for each med tracing out
@@ -385,6 +385,13 @@ print(f'This took {time1-time0} seconds.')
 # fig.xlabel('Minutes')
 # fig.ylabel('Glucose')
 # plt.show()
+med1_plot_df.set_index('Minutes', inplace=True, drop=True)
+med1_plot_df.drop('Glucose', inplace=True, axis=1)
+med2_plot_df.set_index('Minutes', inplace=True, drop=True)
+med2_plot_df.drop('Glucose', inplace=True, axis=1)
+print(med1_plot_df)
+print(med2_plot_df)
+
 plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
 # plot_data = pd.DataFrame()
 # st.line_chart(med2_plot_df)
@@ -393,13 +400,14 @@ plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
 # plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
 # plot_data.columns = [med1_name, med2_name]
 print(plot_data)
-1/0
+
 fig, ax = plt.subplots()
 x = plot_data.index
 y1 = plot_data[med1_name]
 y2 = plot_data[med2_name]
 ax.plot(x, y1, label=med1_name)
 ax.plot(x, y2, label=med2_name)
+ax.legend()
 # plt.show()
 st.pyplot(fig)
 
