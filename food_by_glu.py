@@ -143,13 +143,22 @@ def Create_Food_DFs(df, index_list):
     return dict1
 
 
-def Create_Model(df):
-    result = sm.ols(formula="Glu ~ np.power(Minutes, 2) + Minutes", data=plot_df).fit()
+def Create_Model(df, med):
+    print(df)
+    result = sm.ols(formula="Glucose ~ np.power(Minutes, 2) + Minutes", data=df).fit()
     a = result.params['np.power(Minutes, 2)']
     intercept = result.params['Intercept']
     b = result.params['Minutes']
-    plot_df['Est'] = a*plot_df['Minutes']**2+b*plot_df['Minutes']+intercept
-    return plot_df
+    df[med] = a*df.index**2+b*df.index+intercept
+    return df
+
+# def Create_Model(df):
+#     result = sm.ols(formula="Glu ~ np.power(Minutes, 2) + Minutes", data=plot_df).fit()
+#     a = result.params['np.power(Minutes, 2)']
+#     intercept = result.params['Intercept']
+#     b = result.params['Minutes']
+#     plot_df['Est'] = a*plot_df['Minutes']**2+b*plot_df['Minutes']+intercept
+#     return plot_df
 
 
 def Feature_Eng(df):
@@ -348,14 +357,14 @@ med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 print(med1_dict_of_dfs)
 
 
-def Create_Model(df, med):
-    print(df)
-    result = sm.ols(formula="Glucose ~ np.power(df.index, 2) + Minutes", data=df).fit()
-    a = result.params['np.power(df.index, 2)']
-    intercept = result.params['Intercept']
-    b = result.params['Minutes']
-    df[med] = a*df.index**2+b*df.index+intercept
-    return df
+# def Create_Model(df, med):
+#     print(df)
+#     result = sm.ols(formula="Glucose ~ np.power(df.index, 2) + Minutes", data=df).fit()
+#     a = result.params['np.power(df.index, 2)']
+#     intercept = result.params['Intercept']
+#     b = result.params['Minutes']
+#     df[med] = a*df.index**2+b*df.index+intercept
+#     return df
 
 
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
