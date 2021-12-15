@@ -256,16 +256,16 @@ med_names = []
 med1 = {}
 med2 = {}
 
-med1_name = st.sidebar.text_input('Add Med1')
-med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', df['DateTime'].min(),
+med1_name = st.sidebar.text_input('Add Med1', value='Metformin')
+med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', pd.to_datetime('2021-09-20'),
                                                   df['DateTime'].min(), df['DateTime'].max()))
-med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', df['DateTime'].max(),
+med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', pd.to_datetime('2021-10-16'),
                                                 df['DateTime'].min(), df['DateTime'].max()))
 
-med2_name = st.sidebar.text_input('Add Med2')
-med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', df['DateTime'].min(),
+med2_name = st.sidebar.text_input('Add Med2', value='CoQ10')
+med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', pd.to_datetime('2021-11-11'),
                                                   df['DateTime'].min(), df['DateTime'].max()))
-med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', df['DateTime'].max(),
+med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', pd.to_datetime('2021-11-21'),
                                                 df['DateTime'].min(), df['DateTime'].max()))
 
 if med1_name != '':
@@ -345,6 +345,7 @@ med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
 med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 print(med1_dict_of_dfs)
 
+
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
 med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
 print(med1_plot_df)
@@ -374,7 +375,14 @@ plot_data = pd.concat([plot_data, med1_plot_df], axis=1)
 plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
 plot_data.columns = [med1_name, med2_name]
 print(plot_data)
-st.line_chart(plot_data)
+fig, ax = plt.subplots()
+x = plot_data.index
+y1 = plot_data[med1_name]
+y2 = plot_data[med2_name]
+ax.plot(x, y1, label=med1_name)
+ax.plot(x, y2, label=med2_name)
+# plt.show()
+st.pyplot(fig)
 
 # for med in meds_to_plot:
 #     xy_dict = meds_to_plot.get(med)
