@@ -196,6 +196,8 @@ def Combine_Med_DFs(dict_of_dfs):
         plot_df = plot_df.append(v)
         print(plot_df)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
+    plot_df = pd.DataFrame(plot_df)
+    plot_df.reset_index(inplace=True, drop=False)
     print(plot_df)
     return plot_df
 
@@ -346,10 +348,25 @@ med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 print(med1_dict_of_dfs)
 
 
+def Create_Model(df, med):
+    print(df)
+    result = sm.ols(formula="Glucose ~ np.power(df.index, 2) + Minutes", data=df).fit()
+    a = result.params['np.power(df.index, 2)']
+    intercept = result.params['Intercept']
+    b = result.params['Minutes']
+    df[med] = a*df.index**2+b*df.index+intercept
+    return df
+
+
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
 med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
-print(med1_plot_df)
+print(med1_plot_df.head(1))
 
+med1_plot_df = Create_Model(med1_plot_df, med1_name)
+print(med1_plot_df.head(1))
+med2_plot_df = Create_Model(med2_plot_df, med2_name)
+print(med2_plot_df.head(1))
+1/0
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
 # plot them out with 2 hours on the x axis and a line for each med tracing out
@@ -368,13 +385,15 @@ print(f'This took {time1-time0} seconds.')
 # fig.xlabel('Minutes')
 # fig.ylabel('Glucose')
 # plt.show()
-plot_data = pd.DataFrame()
+plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
+# plot_data = pd.DataFrame()
 # st.line_chart(med2_plot_df)
-plot_data = pd.concat([plot_data, med1_plot_df], axis=1)
+# plot_data = pd.concat([plot_data, med1_plot_df], axis=1)
 # plot_data.columns = [med1_name]
-plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
-plot_data.columns = [med1_name, med2_name]
+# plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
+# plot_data.columns = [med1_name, med2_name]
 print(plot_data)
+1/0
 fig, ax = plt.subplots()
 x = plot_data.index
 y1 = plot_data[med1_name]
