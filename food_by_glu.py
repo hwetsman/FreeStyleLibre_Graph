@@ -238,6 +238,8 @@ if input_needed:
 
 
 st.write('Use the sliders and calendar inputs on the sidebar to filter the data. Scroll down the sidebar to see them all.')
+st.write('In certain cases, foods you choose can be invalidated afterwards because of another food eaten \
+within two hours. If this happens, no graph will appear. Just pick another food.')
 # get most recent data
 path = './most_recent_data/'
 # files = os.listdir(path)
