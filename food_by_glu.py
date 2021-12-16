@@ -380,10 +380,10 @@ med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
 med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
-print(med1_plot_df)
+# print(med1_plot_df)
 
 med1_plot_df = Create_Model(med1_plot_df, med1_name)
-print(med1_plot_df.head(1))
+# print(med1_plot_df.head(1))
 med2_plot_df = Create_Model(med2_plot_df, med2_name)
 
 
@@ -409,7 +409,7 @@ med1_plot_df.set_index('Minutes', inplace=True, drop=True)
 med1_plot_df.drop('Glucose', inplace=True, axis=1)
 med2_plot_df.set_index('Minutes', inplace=True, drop=True)
 med2_plot_df.drop('Glucose', inplace=True, axis=1)
-print(med1_plot_df)
+# print(med1_plot_df)
 
 plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
 # plot_data = pd.DataFrame()
@@ -418,7 +418,7 @@ plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
 # plot_data.columns = [med1_name]
 # plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
 # plot_data.columns = [med1_name, med2_name]
-print(plot_data)
+# print(plot_data)
 
 fig, ax = plt.subplots()
 x = plot_data.index
