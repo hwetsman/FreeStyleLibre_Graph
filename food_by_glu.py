@@ -126,25 +126,25 @@ def Create_Food_DFs(df, index_list):
     """
     dict1 = {}
     for idx in index_list:
-        print('index:', idx)
+        # print('index:', idx)
         # find the start time for these indexes
         start_time = df['DateTime'][idx]
         end_time = start_time + pd.DateOffset(hours=2)
         # select the rows from those instances to 2 hours after those instances as temp_df
         temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
-        print(temp_df.head())
+        # print(temp_df.head())
         # temp_df.dropna(thresh=2,inplace=True)
         raw_list = list(set(temp_df.Notes.tolist()))
-        print(raw_list)
+        # print(raw_list)
         # remove nan from list
         final_list = [x for x in raw_list if pd.isnull(x) == False]
-        print(final_list)
+        # print(final_list)
         # if there is another note in those rows discard the tmep_df
         if len(final_list) == 1:
             temp_df.Notes = final_list[0]
             temp_df = temp_df[~temp_df.Glucose.isnull()]
             dict1[start_time] = temp_df
-            print(dict1)
+            # print(dict1)
     return dict1
 
 
