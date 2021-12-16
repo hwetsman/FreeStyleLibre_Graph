@@ -257,12 +257,12 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
-print(df.head())
+# print(df.head())
 
 # Limit records
 print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
-print(df.shape)
+# print(df.shape)
 
 # get names of meds into streamlit
 med_names = []
