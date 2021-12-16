@@ -324,20 +324,20 @@ df.to_csv('df_sorted.csv', index=False)
 org_df = df
 # create food_dict
 food_dict = Create_Food_Dict(df)
-print(med1_df)
+# print(med1_df)
 med1_food_dict = Create_Food_Dict(med1_df)
-print(med1_food_dict)
+# print(med1_food_dict)
 med2_food_dict = Create_Food_Dict(med2_df)
-print(med2_food_dict)
+# print(med2_food_dict)
 
 # create list of foods
 med1_list = [x for x in med1_food_dict]
 med2_list = [x for x in med2_food_dict]
-print(med1_list)
-print(med2_list)
+# print(med1_list)
+# print(med2_list)
 
 list_of_plottable_foods = [x for x in med1_list if x in med2_list]
-print(list_of_plottable_foods)
+# print(list_of_plottable_foods)
 
 print(f'These foods are in the database for both meds and so may be worth plotting:')
 food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lower()
