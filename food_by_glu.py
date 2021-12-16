@@ -350,7 +350,7 @@ df = org_df
 index_list = Get_Index_List(df, food)
 med1_index_list = Get_Index_List(med1_df, food)
 med2_index_list = Get_Index_List(med2_df, food)
-st.write(f"'{food}' occurs {len(index_list)} times in the dataset.")
+# st.write(f"'{food}' occurs {len(index_list)} times in the dataset.")
 
 # iterate the index_list to create a list of post prandial dfs
 print('\nCreating post prandial dataframes...')
