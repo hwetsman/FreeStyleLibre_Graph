@@ -203,17 +203,17 @@ def Create_Med_DF(p_df, med):
 
 
 def Combine_Med_DFs(dict_of_dfs):
-    print(dict_of_dfs)
+    # print(dict_of_dfs)
     plot_df = pd.DataFrame()
     for k, v in dict_of_dfs.items():
-        print(v)
+        # print(v)
         plot_df = plot_df.append(v)
-        print(plot_df)
+        # print(plot_df)
     # plot_df.sort_values(by=['Minutes'], axis=1, inplace=True)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     plot_df = pd.DataFrame(plot_df)
     plot_df.reset_index(inplace=True, drop=False)
-    print(plot_df)
+    # print(plot_df)
     return plot_df
 
 
