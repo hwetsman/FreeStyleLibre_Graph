@@ -244,11 +244,9 @@ within two hours. If this happens, no graph will appear. Just pick another food.
 path = './most_recent_data/'
 # files = os.listdir(path)
 file = os.listdir(path)[0]
-# print(file)
 
 # create df
 df = pd.read_csv(path+file, header=1)
-# print(df.head())
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
@@ -257,12 +255,10 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
-# print(df.head())
 
 # Limit records
 print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
-# print(df.shape)
 
 # get names of meds into streamlit
 med_names = []
@@ -293,26 +289,15 @@ if med1_name != '':
     med1['end_date'] = med1_end
     med_names.append(med1)
 if med2_name != '':
-    # print(med2_name)
     med2['name'] = med2_name
     med2['start_date'] = med2_start
     med2['end_date'] = med2_end
 meds = [med1, med2]
 
-
-# we are not creating good med_dfs
-# print('\ndf')
-# print(df)
 copy = df.copy()
-# print('copy')
-# print(copy)
-
 
 # create med_df
 med1_df = Create_Med_DF(df.copy(), med1)
-# print('med1_df')
-# print(med1_df)
-
 med2_df = Create_Med_DF(df.copy(), med2)
 
 # save as interim
