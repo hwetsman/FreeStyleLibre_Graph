@@ -244,11 +244,11 @@ within two hours. If this happens, no graph will appear. Just pick another food.
 path = './most_recent_data/'
 # files = os.listdir(path)
 file = os.listdir(path)[0]
-print(file)
+# print(file)
 
 # create df
 df = pd.read_csv(path+file, header=1)
-print(df.head())
+# print(df.head())
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
