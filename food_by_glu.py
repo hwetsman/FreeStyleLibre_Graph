@@ -56,21 +56,6 @@ def Combine_Glu(df):
     return(df)
 
 
-# def Trim_Food_Dict(food_dict, occurances):
-#     """
-#     inputs(dict,int)
-#     food_dict (dict): a dictionary of foods in the dataset as key and the number of
-#     occurances of that food as the value
-#     occurances (int): the number of occurances the user wishes to use as the filter
-#     for the output list of foods
-#     ouput(list)
-#     The output is a list of foods occuring more often in the dataset than the
-#     occurances cut off.
-#     """
-#     list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > occurances]
-#     return list_of_plottable_foods
-
-
 def Dedup_and_Sort(df):
     # df.set_index('DateTime', inplace=True, drop=True)
     # df = df[df.index >= start_date]
@@ -78,25 +63,6 @@ def Dedup_and_Sort(df):
     df.drop_duplicates(inplace=True)
     df = df.sort_values(by='DateTime', ascending=True)
     return df
-
-
-# def Set_Meds(avg_df, meds):
-#     # set med cols to zeros
-#     for med in meds:
-#         name = med.get('name')
-#         avg_df[name] = 0
-#         start = med.get('start_date')
-#         start_year, start_month, start_day = start.split('-')
-#         end = med.get('end_date')
-#         end_year, end_month, end_day = end.split('-')
-#         days = np.arange(datetime(int(start_year), int(start_month), int(start_day)), datetime(
-#             int(end_year), int(end_month), int(end_day)), timedelta(days=1)).astype(datetime)
-#         for date in days:
-#             if date in avg_df.index:
-#                 avg_df.loc[date, name] = 200
-#             else:
-#                 pass
-#     return avg_df
 
 
 def Create_Food_Dict(df):
@@ -143,7 +109,6 @@ def Create_Food_DFs(df, index_list):
 
 
 def Create_Model(df, med):
-    # print(df)
     result = sm.ols(formula="Glucose ~ np.power(Minutes, 2) + Minutes", data=df).fit()
     a = result.params['np.power(Minutes, 2)']
     intercept = result.params['Intercept']
@@ -172,12 +137,8 @@ def Get_Index_List(df, food):
 
 def Create_Med_DF(p_df, med):
     print('\nCreating med df...')
-    # print(p_df.head())
-    # print(med)
     start_date = pd.to_datetime(med.get('start_date'), format="%m-%d-%Y %I:%M %p")
-    # print(start_date, type(start_date))
     end_date = med.get('end_date')
-    # print(end_date, type(end_date))
     p_df.set_index('DateTime', inplace=True, drop=True)
     p_df = p_df[p_df.index >= start_date]
     p_df = p_df[p_df.index <= end_date]
@@ -189,17 +150,12 @@ def Create_Med_DF(p_df, med):
 
 
 def Combine_Med_DFs(dict_of_dfs):
-    # print(dict_of_dfs)
     plot_df = pd.DataFrame()
     for k, v in dict_of_dfs.items():
-        # print(v)
         plot_df = plot_df.append(v)
-        # print(plot_df)
-    # plot_df.sort_values(by=['Minutes'], axis=1, inplace=True)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     plot_df = pd.DataFrame(plot_df)
     plot_df.reset_index(inplace=True, drop=False)
-    # print(plot_df)
     return plot_df
 
 
