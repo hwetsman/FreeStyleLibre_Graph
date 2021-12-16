@@ -56,19 +56,19 @@ def Combine_Glu(df):
     return(df)
 
 
-def Trim_Food_Dict(food_dict, occurances):
-    """
-    inputs(dict,int)
-    food_dict (dict): a dictionary of foods in the dataset as key and the number of
-    occurances of that food as the value
-    occurances (int): the number of occurances the user wishes to use as the filter
-    for the output list of foods
-    ouput(list)
-    The output is a list of foods occuring more often in the dataset than the
-    occurances cut off.
-    """
-    list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > occurances]
-    return list_of_plottable_foods
+# def Trim_Food_Dict(food_dict, occurances):
+#     """
+#     inputs(dict,int)
+#     food_dict (dict): a dictionary of foods in the dataset as key and the number of
+#     occurances of that food as the value
+#     occurances (int): the number of occurances the user wishes to use as the filter
+#     for the output list of foods
+#     ouput(list)
+#     The output is a list of foods occuring more often in the dataset than the
+#     occurances cut off.
+#     """
+#     list_of_plottable_foods = [x for x in food_dict if food_dict.get(x) > occurances]
+#     return list_of_plottable_foods
 
 
 def Dedup_and_Sort(df):
@@ -80,23 +80,23 @@ def Dedup_and_Sort(df):
     return df
 
 
-def Set_Meds(avg_df, meds):
-    # set med cols to zeros
-    for med in meds:
-        name = med.get('name')
-        avg_df[name] = 0
-        start = med.get('start_date')
-        start_year, start_month, start_day = start.split('-')
-        end = med.get('end_date')
-        end_year, end_month, end_day = end.split('-')
-        days = np.arange(datetime(int(start_year), int(start_month), int(start_day)), datetime(
-            int(end_year), int(end_month), int(end_day)), timedelta(days=1)).astype(datetime)
-        for date in days:
-            if date in avg_df.index:
-                avg_df.loc[date, name] = 200
-            else:
-                pass
-    return avg_df
+# def Set_Meds(avg_df, meds):
+#     # set med cols to zeros
+#     for med in meds:
+#         name = med.get('name')
+#         avg_df[name] = 0
+#         start = med.get('start_date')
+#         start_year, start_month, start_day = start.split('-')
+#         end = med.get('end_date')
+#         end_year, end_month, end_day = end.split('-')
+#         days = np.arange(datetime(int(start_year), int(start_month), int(start_day)), datetime(
+#             int(end_year), int(end_month), int(end_day)), timedelta(days=1)).astype(datetime)
+#         for date in days:
+#             if date in avg_df.index:
+#                 avg_df.loc[date, name] = 200
+#             else:
+#                 pass
+#     return avg_df
 
 
 def Create_Food_Dict(df):
