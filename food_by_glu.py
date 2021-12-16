@@ -294,15 +294,9 @@ if med2_name != '':
     med2['end_date'] = med2_end
 meds = [med1, med2]
 
-# copy = df.copy()
-
 # create med_df
 med1_df = Create_Med_DF(df.copy(), med1)
 med2_df = Create_Med_DF(df.copy(), med2)
-
-# save as interim
-# df.to_csv('df_sorted.csv', index=False)
-# org_df = df
 
 # create food_dict
 food_dict = Create_Food_Dict(df)
@@ -316,9 +310,6 @@ list_of_plottable_foods = [x for x in med1_list if x in med2_list]
 
 print(f'These foods are in the database for both meds and so may be worth plotting:')
 food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lower()
-
-# set org_df as df
-# df = org_df
 
 # find the indexes at which the food appears in df.Notes
 index_list = Get_Index_List(df, food)
