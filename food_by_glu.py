@@ -261,7 +261,7 @@ print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
 
 # get names of meds into streamlit
-med_names = []
+
 # cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 # metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 # CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -283,6 +283,7 @@ med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', pd.to_d
 med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', pd.to_datetime('2021-11-21'),
                                                 df['DateTime'].min(), df['DateTime'].max()))
 
+med_names = []
 if med1_name != '':
     med1['name'] = med1_name
     med1['start_date'] = med1_start
