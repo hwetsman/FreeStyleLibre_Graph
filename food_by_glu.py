@@ -365,25 +365,12 @@ med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
 med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 
-# print(med2_dict_of_dfs)
-
-
-# def Create_Model(df, med):
-#     print(df)
-#     result = sm.ols(formula="Glucose ~ np.power(df.index, 2) + Minutes", data=df).fit()
-#     a = result.params['np.power(df.index, 2)']
-#     intercept = result.params['Intercept']
-#     b = result.params['Minutes']
-#     df[med] = a*df.index**2+b*df.index+intercept
-#     return df
-
-
+# combine into one df for each med
 med1_plot_df = Combine_Med_DFs(med1_dict_of_dfs)
 med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
-# print(med1_plot_df)
 
+# create estimated model for each med
 med1_plot_df = Create_Model(med1_plot_df, med1_name)
-# print(med1_plot_df.head(1))
 med2_plot_df = Create_Model(med2_plot_df, med2_name)
 
 
