@@ -126,20 +126,25 @@ def Create_Food_DFs(df, index_list):
     """
     dict1 = {}
     for idx in index_list:
+        print('index:', idx)
         # find the start time for these indexes
         start_time = df['DateTime'][idx]
         end_time = start_time + pd.DateOffset(hours=2)
         # select the rows from those instances to 2 hours after those instances as temp_df
         temp_df = df[(df['DateTime'] >= start_time) & (df['DateTime'] <= end_time)]
+        print(temp_df.head())
         # temp_df.dropna(thresh=2,inplace=True)
         raw_list = list(set(temp_df.Notes.tolist()))
+        print(raw_list)
         # remove nan from list
         final_list = [x for x in raw_list if pd.isnull(x) == False]
+        print(final_list)
         # if there is another note in those rows discard the tmep_df
         if len(final_list) == 1:
             temp_df.Notes = final_list[0]
             temp_df = temp_df[~temp_df.Glucose.isnull()]
             dict1[start_time] = temp_df
+            print(dict1)
     return dict1
 
 
@@ -204,6 +209,7 @@ def Combine_Med_DFs(dict_of_dfs):
         print(v)
         plot_df = plot_df.append(v)
         print(plot_df)
+    # plot_df.sort_values(by=['Minutes'], axis=1, inplace=True)
     plot_df = plot_df.groupby('Minutes')['Glucose'].mean()
     plot_df = pd.DataFrame(plot_df)
     plot_df.reset_index(inplace=True, drop=False)
@@ -348,13 +354,16 @@ st.write(f"'{food}' occurs {len(index_list)} times in the dataset.")
 print('\nCreating post prandial dataframes...')
 dict_of_dfs = Create_Food_DFs(df, index_list)
 med1_dict_of_dfs = Create_Food_DFs(med1_df, med1_index_list)
+print(med2_index_list)
 med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
-print(med1_dict_of_dfs)
+print('\n\nThis is med2_dict_of_dfs')
+print(med2_dict_of_dfs)
 
 # Normalize Med_dfs for glucose and time
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
 med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
-print(med1_dict_of_dfs)
+
+print(med2_dict_of_dfs)
 
 
 # def Create_Model(df, med):
@@ -374,7 +383,7 @@ print(med1_plot_df)
 med1_plot_df = Create_Model(med1_plot_df, med1_name)
 print(med1_plot_df.head(1))
 med2_plot_df = Create_Model(med2_plot_df, med2_name)
-print(med2_plot_df)
+
 
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
@@ -399,7 +408,6 @@ med1_plot_df.drop('Glucose', inplace=True, axis=1)
 med2_plot_df.set_index('Minutes', inplace=True, drop=True)
 med2_plot_df.drop('Glucose', inplace=True, axis=1)
 print(med1_plot_df)
-print(med2_plot_df)
 
 plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
 # plot_data = pd.DataFrame()
