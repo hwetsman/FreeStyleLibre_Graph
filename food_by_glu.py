@@ -186,12 +186,12 @@ def Get_Index_List(df, food):
 
 def Create_Med_DF(p_df, med):
     print('\nCreating med df...')
-    print(p_df.head())
-    print(med)
+    # print(p_df.head())
+    # print(med)
     start_date = pd.to_datetime(med.get('start_date'), format="%m-%d-%Y %I:%M %p")
-    print(start_date, type(start_date))
+    # print(start_date, type(start_date))
     end_date = med.get('end_date')
-    print(end_date, type(end_date))
+    # print(end_date, type(end_date))
     p_df.set_index('DateTime', inplace=True, drop=True)
     p_df = p_df[p_df.index >= start_date]
     p_df = p_df[p_df.index <= end_date]
