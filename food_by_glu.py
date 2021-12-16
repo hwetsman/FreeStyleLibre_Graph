@@ -293,7 +293,7 @@ if med1_name != '':
     med1['end_date'] = med1_end
     med_names.append(med1)
 if med2_name != '':
-    print(med2_name)
+    # print(med2_name)
     med2['name'] = med2_name
     med2['start_date'] = med2_start
     med2['end_date'] = med2_end
@@ -301,17 +301,17 @@ meds = [med1, med2]
 
 
 # we are not creating good med_dfs
-print('\ndf')
-print(df)
+# print('\ndf')
+# print(df)
 copy = df.copy()
-print('copy')
-print(copy)
+# print('copy')
+# print(copy)
 
 
 # create med_df
 med1_df = Create_Med_DF(df.copy(), med1)
-print('med1_df')
-print(med1_df)
+# print('med1_df')
+# print(med1_df)
 
 med2_df = Create_Med_DF(df.copy(), med2)
 
