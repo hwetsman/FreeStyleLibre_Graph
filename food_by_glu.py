@@ -149,7 +149,7 @@ def Create_Food_DFs(df, index_list):
 
 
 def Create_Model(df, med):
-    print(df)
+    # print(df)
     result = sm.ols(formula="Glucose ~ np.power(Minutes, 2) + Minutes", data=df).fit()
     a = result.params['np.power(Minutes, 2)']
     intercept = result.params['Intercept']
