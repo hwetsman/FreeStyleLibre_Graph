@@ -261,7 +261,6 @@ print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
 
 # get names of meds into streamlit
-
 # cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 # metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 # CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -295,15 +294,15 @@ if med2_name != '':
     med2['end_date'] = med2_end
 meds = [med1, med2]
 
-copy = df.copy()
+# copy = df.copy()
 
 # create med_df
 med1_df = Create_Med_DF(df.copy(), med1)
 med2_df = Create_Med_DF(df.copy(), med2)
 
 # save as interim
-df.to_csv('df_sorted.csv', index=False)
-org_df = df
+# df.to_csv('df_sorted.csv', index=False)
+# org_df = df
 
 # create food_dict
 food_dict = Create_Food_Dict(df)
@@ -319,7 +318,7 @@ print(f'These foods are in the database for both meds and so may be worth plotti
 food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lower()
 
 # set org_df as df
-df = org_df
+# df = org_df
 
 # find the indexes at which the food appears in df.Notes
 index_list = Get_Index_List(df, food)
