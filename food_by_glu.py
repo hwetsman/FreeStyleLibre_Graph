@@ -412,13 +412,7 @@ med2_plot_df.drop('Glucose', inplace=True, axis=1)
 # print(med1_plot_df)
 
 plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
-# plot_data = pd.DataFrame()
-# st.line_chart(med2_plot_df)
-# plot_data = pd.concat([plot_data, med1_plot_df], axis=1)
-# plot_data.columns = [med1_name]
-# plot_data = pd.concat([plot_data, med2_plot_df], axis=1)
-# plot_data.columns = [med1_name, med2_name]
-# print(plot_data)
+
 
 fig, ax = plt.subplots()
 x = plot_data.index
@@ -429,13 +423,3 @@ ax.plot(x, y2, label=med2_name)
 ax.legend()
 # plt.show()
 st.pyplot(fig)
-
-# for med in meds_to_plot:
-#     xy_dict = meds_to_plot.get(med)
-#     index = xy_dict.keys()
-#     temp_df = pd.DataFrame(xy_dict.values(), index=index, columns=[med])
-#     print(temp_df.head())
-#     plot_data = pd.concat([plot_data, temp_df], axis=1)
-#     print(plot_data.head())
-# print(plot_data)
-# st.line_chart(plot_data)
