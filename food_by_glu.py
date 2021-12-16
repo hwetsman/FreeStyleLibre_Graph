@@ -157,14 +157,6 @@ def Create_Model(df, med):
     df[med] = a*df.index**2+b*df.index+intercept
     return df
 
-# def Create_Model(df):
-#     result = sm.ols(formula="Glu ~ np.power(Minutes, 2) + Minutes", data=plot_df).fit()
-#     a = result.params['np.power(Minutes, 2)']
-#     intercept = result.params['Intercept']
-#     b = result.params['Minutes']
-#     plot_df['Est'] = a*plot_df['Minutes']**2+b*plot_df['Minutes']+intercept
-#     return plot_df
-
 
 def Feature_Eng(df):
     df.drop(['Device', 'Serial Number',
