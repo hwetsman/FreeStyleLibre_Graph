@@ -389,30 +389,12 @@ med2_plot_df = Create_Model(med2_plot_df, med2_name)
 
 time1 = time.time()
 print(f'This took {time1-time0} seconds.')
-# plot them out with 2 hours on the x axis and a line for each med tracing out
-# fig, ax = plt.subplots()
-# print(fig)
-# for med in meds_to_plot:
-#     xy_dict = meds_to_plot.get(med)
-#     x = xy_dict.keys()
-#     y = xy_dict.values()
-#     st.line_chart(x, y)
-#     # ax.plot(x, y, label=med)
-# else:
-#     pass
-# fig.legend()
-# fig.title(f"2-hr Glucose Pattern After '{food}'")
-# fig.xlabel('Minutes')
-# fig.ylabel('Glucose')
-# plt.show()
+
 med1_plot_df.set_index('Minutes', inplace=True, drop=True)
 med1_plot_df.drop('Glucose', inplace=True, axis=1)
 med2_plot_df.set_index('Minutes', inplace=True, drop=True)
 med2_plot_df.drop('Glucose', inplace=True, axis=1)
-# print(med1_plot_df)
-
 plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
-
 
 fig, ax = plt.subplots()
 x = plot_data.index
@@ -421,5 +403,4 @@ y2 = plot_data[med2_name]
 ax.plot(x, y1, label=med1_name)
 ax.plot(x, y2, label=med2_name)
 ax.legend()
-# plt.show()
 st.pyplot(fig)
