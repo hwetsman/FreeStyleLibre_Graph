@@ -345,21 +345,16 @@ food = st.sidebar.select_slider('Available Foods', list_of_plottable_foods).lowe
 # set org_df as df
 df = org_df
 
-# get dfs of 2 hour post prandial periods after eating 'food'
 # find the indexes at which the food appears in df.Notes
 index_list = Get_Index_List(df, food)
 med1_index_list = Get_Index_List(med1_df, food)
 med2_index_list = Get_Index_List(med2_df, food)
-# st.write(f"'{food}' occurs {len(index_list)} times in the dataset.")
 
 # iterate the index_list to create a list of post prandial dfs
 print('\nCreating post prandial dataframes...')
 dict_of_dfs = Create_Food_DFs(df, index_list)
 med1_dict_of_dfs = Create_Food_DFs(med1_df, med1_index_list)
-# print(med2_index_list)
 med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
-# print('\n\nThis is med2_dict_of_dfs')
-# print(med2_dict_of_dfs)
 
 # Normalize Med_dfs for glucose and time
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
