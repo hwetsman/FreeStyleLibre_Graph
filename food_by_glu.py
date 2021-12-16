@@ -356,16 +356,16 @@ med2_index_list = Get_Index_List(med2_df, food)
 print('\nCreating post prandial dataframes...')
 dict_of_dfs = Create_Food_DFs(df, index_list)
 med1_dict_of_dfs = Create_Food_DFs(med1_df, med1_index_list)
-print(med2_index_list)
+# print(med2_index_list)
 med2_dict_of_dfs = Create_Food_DFs(med2_df, med2_index_list)
-print('\n\nThis is med2_dict_of_dfs')
-print(med2_dict_of_dfs)
+# print('\n\nThis is med2_dict_of_dfs')
+# print(med2_dict_of_dfs)
 
 # Normalize Med_dfs for glucose and time
 med1_dict_of_dfs = Normalize_DFs(med1_dict_of_dfs)
 med2_dict_of_dfs = Normalize_DFs(med2_dict_of_dfs)
 
-print(med2_dict_of_dfs)
+# print(med2_dict_of_dfs)
 
 
 # def Create_Model(df, med):
