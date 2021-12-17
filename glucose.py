@@ -108,7 +108,7 @@ meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
-
+print(files)
 # create df
 df = pd.DataFrame()
 for file in files:
@@ -150,7 +150,7 @@ df.drop_duplicates(inplace=True)
 avg_df = Create_Avg_DF(df)
 print(avg_df)
 
-
+print(df)
 # create std_df for mean glucose
 std_df = Create_Std_DF(df)
 print(std_df)
@@ -158,9 +158,16 @@ print(std_df)
 
 # add meds to the df
 avg_df = Set_Meds(avg_df, meds)
+# print(avg_df)
+# 1/0
 
+# avg_df['rolling'] = avg_df.Glucose.rolling(7).mean().shift(-3)
+# sns.lineplot(x=avg_df.index, y='rolling', data=avg_df)
+# plt.show()
+# 1/0
 print('\nGenerating plot...')
 figure(figsize=(15, 8))
+sns.set_style('dark')
 # glucose
 plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
 # mean
@@ -193,6 +200,7 @@ plt.hlines(150, avg_df.index.min(), avg_df.index.max(),
            colors='red', linestyles='solid', linewidth=.7)
 # xticks
 plt.xticks(rotation='vertical')
+plt.title('Glucose by Date')
 # legend
 plt.legend(loc='upper left')
 plt.show()
