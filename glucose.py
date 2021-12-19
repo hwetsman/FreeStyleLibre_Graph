@@ -174,7 +174,9 @@ avg_df['rolling'] = avg_df.Glucose.rolling(7).mean().shift(-3)
 sns.lineplot(x=avg_df.index, y='rolling', data=avg_df)
 # plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
 # std dev
-plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
+# plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
+#                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
+plt.fill_between(avg_df.index, avg_df['rolling'] + std_df['Glucose']/2,
                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
 
 med_num = len(meds)
