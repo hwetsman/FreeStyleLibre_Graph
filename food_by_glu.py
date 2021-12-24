@@ -179,7 +179,8 @@ input_needed = st.button('Use your own data')
 if input_needed:
     uploaded_file = st.file_uploader("Choose a file")
     file = uploaded_file
-
+else:
+    file = os.listdir(path)[0]
 
 st.write('Use the sliders and calendar inputs on the sidebar to filter the data. Scroll down the sidebar to see them all.')
 st.write('In certain cases, foods you choose can be invalidated afterwards because of another food eaten \
