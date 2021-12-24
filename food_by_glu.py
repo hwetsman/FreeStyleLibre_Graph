@@ -26,9 +26,9 @@ import matplotlib
 matplotlib.use('TkAgg')
 pd.options.mode.chained_assignment = None
 
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.expand_frame_repr', False)
+# pd.set_option('display.max_columns', 500)
+# pd.set_option('display.max_rows', 500)
+# pd.set_option('display.expand_frame_repr', False)
 
 
 def Combine_Glu(df):
