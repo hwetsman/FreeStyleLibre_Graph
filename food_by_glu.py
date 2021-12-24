@@ -57,9 +57,6 @@ def Combine_Glu(df):
 
 
 def Dedup_and_Sort(df):
-    # df.set_index('DateTime', inplace=True, drop=True)
-    # df = df[df.index >= start_date]
-    # df.reset_index(inplace=True)
     df.drop_duplicates(inplace=True)
     df = df.sort_values(by='DateTime', ascending=True)
     return df
