@@ -209,21 +209,22 @@ df = Dedup_and_Sort(df)
 # ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
 #              'end_date': datetime.today().date().strftime('%Y-%m-%d')}
 # meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
+# set up empty med_dicts
 med1 = {}
 med2 = {}
-
+# get input for med1
 med1_name = st.sidebar.text_input('Add Med1', value='Metformin')
 med1_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med1', pd.to_datetime('2021-09-20'),
                                                   df['DateTime'].min(), df['DateTime'].max()))
 med1_end = pd.to_datetime(st.sidebar.date_input('End Date for Med1', pd.to_datetime('2021-10-16'),
                                                 df['DateTime'].min(), df['DateTime'].max()))
-
+# get input for med2
 med2_name = st.sidebar.text_input('Add Med2', value='CoQ10')
 med2_start = pd.to_datetime(st.sidebar.date_input('Start Date for Med2', pd.to_datetime('2021-11-11'),
                                                   df['DateTime'].min(), df['DateTime'].max()))
 med2_end = pd.to_datetime(st.sidebar.date_input('End Date for Med2', pd.to_datetime('2021-11-21'),
                                                 df['DateTime'].min(), df['DateTime'].max()))
-
+# create list of med_dicts
 med_names = []
 if med1_name != '':
     med1['name'] = med1_name
