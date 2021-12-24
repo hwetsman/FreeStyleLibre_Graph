@@ -12,6 +12,7 @@ The Libreview portal will show the user the acute effects of short acting meds s
 The best way to utilize this repo currently is to download the data and scripts into your own environment and run them. Currently, `python3 glucose.py` will run that script to show you the rolling 7-day average, sd, and raw glucose readings between two hard coded time points. You can change those time points to fit your data if you don't want to use the sample data. It will show the medications below the line graphs as horizontal bars. You can use the sample meds in the sample data or insert your own meds with start and end dates in the hardcoded meds dictionary in the script.
 
 ## food_by_glu.py
+Clone the repo, set up your venv, and run `pip3 install -r requirements.txt` from within the directory where food_by_glu.py resides.
 You can use `streamlit run food_by_glu.py` to run this script that will create a visualization of 2 hour post-prandial glucose response by medication. The plot is a quadratic model of the mean glucose at each minute post-prandial for each medication. It takes the start and stop dates of up to two daily meds in order to show comparisons of those two meds. One med of choice could be 'No Med' if the user choses and enters dates when no daily med was taken. This is version 0.1 of the app. It uses Streamlit to generate an interactive browser window.
 
 # Future
