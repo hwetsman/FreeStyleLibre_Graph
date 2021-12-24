@@ -168,7 +168,6 @@ def Normalize_DFs(dict_of_dfs):
     return dict_of_dfs
 
 
-time0 = time.time()
 # get most recent data
 path = './most_recent_data/'
 # files = os.listdir(path)
@@ -277,9 +276,6 @@ med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
 med1_plot_df = Create_Model(med1_plot_df, med1_name)
 med2_plot_df = Create_Model(med2_plot_df, med2_name)
 
-
-time1 = time.time()
-print(f'This took {time1-time0} seconds.')
 
 med1_plot_df.set_index('Minutes', inplace=True, drop=True)
 med1_plot_df.drop('Glucose', inplace=True, axis=1)
