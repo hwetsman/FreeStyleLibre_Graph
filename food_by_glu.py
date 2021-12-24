@@ -26,10 +26,6 @@ import matplotlib
 matplotlib.use('TkAgg')
 pd.options.mode.chained_assignment = None
 
-# pd.set_option('display.max_columns', 500)
-# pd.set_option('display.max_rows', 500)
-# pd.set_option('display.expand_frame_repr', False)
-
 
 def Combine_Glu(df):
     """ This function divides the df into measurements and notes where measurements
@@ -57,12 +53,25 @@ def Combine_Glu(df):
 
 
 def Dedup_and_Sort(df):
+    """ This function drops the duplicate rows in the df and sorts the values by
+    the DateTime column in an ascending fashion.
+    input: pandas df
+    output: pandas df
+    """
     df.drop_duplicates(inplace=True)
     df = df.sort_values(by='DateTime', ascending=True)
     return df
 
 
 def Create_Food_Dict(df):
+    """ This function finds the meds in the Notes column and creates a list of
+    them. It then creates a df of only those rows that have a note in Notes
+    col. Then, iterating the food list, it gets the specific food and number of
+    times it appears in the dataset. It then creates a dictionary with food as
+    the key and number of times it appears the value.
+    input: pandas df
+    output: python dict
+    """
     food_dict = {}
     foods = list(set(df.Notes.tolist()))
     contains_notes = df[~df.Notes.isnull()]
@@ -106,6 +115,14 @@ def Create_Food_DFs(df, index_list):
 
 
 def Create_Model(df, med):
+    """
+    This function takes a pandas df for a medication, index being the minutes
+    post prandial. It creates a model from the df and adds an estimated glu
+    col with the name of the medicine as the col name. It then returns that
+    processed df.
+    input: pandas df and a str of the mediction name
+    output: pandas df
+    """
     result = sm.ols(formula="Glucose ~ np.power(Minutes, 2) + Minutes", data=df).fit()
     a = result.params['np.power(Minutes, 2)']
     intercept = result.params['Intercept']
@@ -115,6 +132,13 @@ def Create_Model(df, med):
 
 
 def Feature_Eng(df):
+    """
+    This function takes the input df, drops unneeded columns, renames others,
+    normalizes Notes col by lowering capital letters, and combining the three
+    glucose measures into a single glucose column.
+    input: pandas df
+    output: pandas df
+    """
     df.drop(['Device', 'Serial Number',
             'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
              'Carbohydrates (grams)', 'Carbohydrates (servings)',
@@ -133,6 +157,12 @@ def Get_Index_List(df, food):
 
 
 def Create_Med_DF(p_df, med):
+    """
+    This function takes in a df and a dictionary. It gets the start and end
+    dates from the dictionary and returns a deduplicated df between those dates.
+    input:pandas df and the med dictionary
+    output:pandas df
+    """
     print('\nCreating med df...')
     start_date = pd.to_datetime(med.get('start_date'), format="%m-%d-%Y %I:%M %p")
     end_date = med.get('end_date')
@@ -147,6 +177,12 @@ def Create_Med_DF(p_df, med):
 
 
 def Combine_Med_DFs(dict_of_dfs):
+    """
+    This script takes the post-prandial dfs for a specific medication and c
+    ombines them to make a single plot_df.
+    input: python dictionary of dfs for a single med
+    output: pandas df
+    """
     plot_df = pd.DataFrame()
     for k, v in dict_of_dfs.items():
         plot_df = plot_df.append(v)
@@ -157,6 +193,15 @@ def Combine_Med_DFs(dict_of_dfs):
 
 
 def Normalize_DFs(dict_of_dfs):
+    """
+    This function iterates through a dictionary of post-prandial dataframes,
+    determines the start times, and converts those into minutes since meal started.
+    It also takes the time zero glucose, converts it to 0 and subtracts it from
+    all the other glucose values. This normalizes all the dfs for plotting from
+    0 min, 0 glucose origin.
+    input: dictionary of pandas dataframes
+    output: dictionary of pandas dataframes
+    """
     for k, v in dict_of_dfs.items():
         start_time = v['DateTime'].tolist()[0]
         start = v['Glucose'].tolist()[0]
