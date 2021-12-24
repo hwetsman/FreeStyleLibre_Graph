@@ -276,13 +276,15 @@ med2_plot_df = Combine_Med_DFs(med2_dict_of_dfs)
 med1_plot_df = Create_Model(med1_plot_df, med1_name)
 med2_plot_df = Create_Model(med2_plot_df, med2_name)
 
-
+# engineer med_plots for merging
 med1_plot_df.set_index('Minutes', inplace=True, drop=True)
 med1_plot_df.drop('Glucose', inplace=True, axis=1)
 med2_plot_df.set_index('Minutes', inplace=True, drop=True)
 med2_plot_df.drop('Glucose', inplace=True, axis=1)
+# create combined plot data
 plot_data = pd.concat([med1_plot_df, med2_plot_df], axis=1)
 
+# create fig and plot
 fig, ax = plt.subplots()
 x = plot_data.index
 y1 = plot_data[med1_name]
