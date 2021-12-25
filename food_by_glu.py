@@ -228,7 +228,8 @@ else:
 
 st.write('Use the sliders and calendar inputs on the sidebar to filter the data. Scroll down the sidebar to see them all.')
 st.write('In certain cases, foods you choose can be invalidated afterwards because of another food eaten \
-within two hours. If this happens, no graph will appear. Just pick another food.')
+within two hours. If this happens, a big red square with a lot of text will appear. Just move the slider \
+to another food.')
 
 
 # create df
