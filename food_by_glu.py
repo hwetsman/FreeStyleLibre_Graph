@@ -337,6 +337,7 @@ y1 = plot_data[med1_name]
 y2 = plot_data[med2_name]
 ax.plot(x, y1, label=med1_name)
 ax.plot(x, y2, label=med2_name)
+ax.set_title(f"2-hr Post-meal Glucose for '{food}'")
 ax.set_xlabel('Minutes From First Bite')
 ax.set_ylabel('Relative Glucose Level (mg/dL)')
 ax.legend()
