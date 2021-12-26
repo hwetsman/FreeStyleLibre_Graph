@@ -245,10 +245,15 @@ df = Feature_Eng(df)
 
 
 print(list(set(df.Notes.tolist())))
+df['Notes'] = df['Notes'].astype(str)
 df['Notes'] = df['Notes'].str.replace(',', ' ')
 df['Notes'] = df['Notes'].str.replace('   ', ' ')
 df['Notes'] = df['Notes'].str.replace('  ', ' ')
 print(list(set(df.Notes.tolist())))
+for idx, row in df.iterrows():
+    note = df.loc[idx, 'Notes']
+    notes_list = note.split(' ')
+    print(notes_list)
 1/0
 
 # Limit records
