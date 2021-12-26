@@ -250,10 +250,18 @@ df['Notes'] = df['Notes'].str.replace(',', ' ')
 df['Notes'] = df['Notes'].str.replace('   ', ' ')
 df['Notes'] = df['Notes'].str.replace('  ', ' ')
 print(list(set(df.Notes.tolist())))
+df['SHA'] = 1
 for idx, row in df.iterrows():
+    sha = 1
     note = df.loc[idx, 'Notes']
     notes_list = note.split(' ')
+    for word in notes_list:
+        print(word)
+        sha = sha*sha(str(word))
+
+    df.loc[idx, 'SHA'] = sha
     print(notes_list)
+print(df.head())
 1/0
 
 # Limit records
