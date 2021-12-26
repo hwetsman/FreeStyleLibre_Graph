@@ -243,6 +243,14 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
 
+
+print(list(set(df.Notes.tolist())))
+df['Notes'] = df['Notes'].str.replace(',', ' ')
+df['Notes'] = df['Notes'].str.replace('   ', ' ')
+df['Notes'] = df['Notes'].str.replace('  ', ' ')
+print(list(set(df.Notes.tolist())))
+1/0
+
 # Limit records
 print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
