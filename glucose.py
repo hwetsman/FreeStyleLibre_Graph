@@ -35,6 +35,7 @@ def Combine_Glu(df):
     returned.
     """
     print('\nCombining measurements...')
+    st.write('\nCombining measurements...')
     notes = df[df['Record Type'] >= 5]
     measures = df[df['Record Type'] <= 2]
     measures['Historic Glucose mg/dL'].fillna(value=0, inplace=True)
