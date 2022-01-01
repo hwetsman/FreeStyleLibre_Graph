@@ -62,7 +62,6 @@ def Create_Avg_DF(df):
 
 
 def Create_Std_DF(df):
-    # df.set_index('DateTime', inplace=True, drop=True)
     std_df = df.groupby(
         pd.Grouper(freq='d')).std().dropna(how='all')
     std_df = std_df[['Glucose']]
@@ -108,8 +107,7 @@ CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'
 ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
              'end_date': datetime.today().date().strftime('%Y-%m-%d')}
 meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
-# print(ezetimibe.get('end_date'))
-# 1/0
+
 # get most recent data
 path = './most_recent_data/'
 files = os.listdir(path)
@@ -134,18 +132,10 @@ df.drop(['Device', 'Serial Number',
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
-# ask for input for start date
-# start_date = pd.to_datetime(
-# input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
-
 default_start = df['Device Timestamp'].min()
 start_date = pd.to_datetime(st.date_input('Start_Date', value=default_start))
 default_end = df['Device Timestamp'].max()
 end_date = pd.to_datetime(st.date_input('End_Date', value=default_end))
-
-
-# start_date = pd.to_datetime('2021-09-14')
-# print(type(start_date))
 
 df = Limit_to_Current(df, start_date, end_date)
 print('Limited to Current...')
@@ -171,28 +161,15 @@ print(std_df)
 
 # add meds to the df
 avg_df = Set_Meds(avg_df, meds)
-# print(avg_df)
-# 1/0
 
-
-# plt.show()
-# 1/0
 print('\nGenerating plot...')
-# figure(figsize=(15, 8))
 fig, ax = plt.subplots(figsize=(15, 8))
-# fig.set_size_inches(15, 8)
-# fig(figsize=(15, 8))
 sns.set_style('dark')
-# glucose
 ax.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
-# plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
 # mean
 avg_df['rolling'] = avg_df.Glucose.rolling(7).mean().shift(-3)
 sns.lineplot(x=avg_df.index, y='rolling', data=avg_df)
-# plt.plot(avg_df.index, avg_df['Glucose'], label='Mean')
 # std dev
-# plt.fill_between(avg_df.index, avg_df['Glucose'] + std_df['Glucose']/2,
-#                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
 plt.fill_between(avg_df.index, avg_df['rolling'] + std_df['Glucose']/2,
                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
 
@@ -205,7 +182,6 @@ for i in range(med_num):
         start = start_date
     else:
         pass
-    # end = pd.to_datetime(med.get('end_date'))
     end = end_date
     name = med.get('name')
     plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
