@@ -115,11 +115,13 @@ print(files)
 df = pd.DataFrame()
 for file in files:
     print(f'\nLoading file {file}...')
+    st.write(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1)
     df = df.append(temp)
 
 # prune df
 print('\nDropping unneeded columns...')
+st.write('\nDropping unneeded columns...')
 df.drop(['Device', 'Serial Number',
         'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
          'Carbohydrates (grams)', 'Carbohydrates (servings)',
@@ -129,13 +131,21 @@ df.drop(['Device', 'Serial Number',
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
+st.write('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
 # ask for input for start date
 # start_date = pd.to_datetime(
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
-start_date = pd.to_datetime('2021-09-14')
-print(type(start_date))
+
+default_start = df['Device Timestamp'].min()
+start_date = st.date_input('Start_Date', value=default_start)
+default_end = df['Device Timestamp'].max()
+end_date = st.date_input('End_Date', value=default_end)
+
+
+# start_date = pd.to_datetime('2021-09-14')
+# print(type(start_date))
 
 df = Limit_to_Current(df, start_date)
 # create df.Glu from measures
