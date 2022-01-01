@@ -70,10 +70,11 @@ def Create_Std_DF(df):
     return std_df
 
 
-def Limit_to_Current(df, start_date):
+def Limit_to_Current(df, start_date, end_date):
     df.set_index('Device Timestamp', inplace=True, drop=True)
     print(type(df.index[0]))
     df = df[df.index >= start_date]
+    df = df[df.index <= end_date]
     df.reset_index(inplace=True)
     return df
 
@@ -139,15 +140,16 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 # input("Please input a start date. If you want to limit your data set. The format is YYYY-MM-DD: "))
 
 default_start = df['Device Timestamp'].min()
-start_date = st.date_input('Start_Date', value=default_start)
+start_date = pd.to_datetime(st.date_input('Start_Date', value=default_start))
 default_end = df['Device Timestamp'].max()
-end_date = st.date_input('End_Date', value=default_end)
+end_date = pd.to_datetime(st.date_input('End_Date', value=default_end))
 
 
 # start_date = pd.to_datetime('2021-09-14')
 # print(type(start_date))
 
-df = Limit_to_Current(df, start_date)
+df = Limit_to_Current(df, start_date, end_date)
+print('Limited to Current...')
 # create df.Glu from measures
 df = Combine_Glu(df)
 
