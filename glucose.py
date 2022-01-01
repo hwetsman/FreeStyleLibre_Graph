@@ -221,6 +221,7 @@ plt.title('Glucose by Date')
 # legend
 plt.legend(loc='upper left')
 plt.show()
+st.pyplot(fig)
 
 
 #
