@@ -35,7 +35,6 @@ def Combine_Glu(df):
     returned.
     """
     print('\nCombining measurements...')
-    st.write('\nCombining measurements...')
     notes = df[df['Record Type'] >= 5]
     measures = df[df['Record Type'] <= 2]
     measures['Historic Glucose mg/dL'].fillna(value=0, inplace=True)
@@ -100,6 +99,9 @@ def Set_Meds(avg_df, meds):
     return avg_df
 
 
+st.write('Pleae select the start and end dates if you want to change the range of the graph.  \
+To enlarge the size of the graph put your mouse over the hamburger menu in the upper right, select \
+settings, and select "wide mode".')
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
 metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'}
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
@@ -116,13 +118,11 @@ print(files)
 df = pd.DataFrame()
 for file in files:
     print(f'\nLoading file {file}...')
-    st.write(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1)
     df = df.append(temp)
 
 # prune df
 print('\nDropping unneeded columns...')
-st.write('\nDropping unneeded columns...')
 df.drop(['Device', 'Serial Number',
         'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
          'Carbohydrates (grams)', 'Carbohydrates (servings)',
@@ -132,7 +132,6 @@ df.drop(['Device', 'Serial Number',
 
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
-st.write('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
 # ask for input for start date
@@ -180,8 +179,8 @@ avg_df = Set_Meds(avg_df, meds)
 # 1/0
 print('\nGenerating plot...')
 # figure(figsize=(15, 8))
-fig, ax = plt.subplots()
-fig.set_size_inches(15, 8)
+fig, ax = plt.subplots(figsize=(15, 8))
+# fig.set_size_inches(15, 8)
 # fig(figsize=(15, 8))
 sns.set_style('dark')
 # glucose
@@ -225,7 +224,7 @@ plt.xticks(rotation='vertical')
 plt.title('Glucose by Date')
 # legend
 plt.legend(loc='upper left')
-plt.show()
+# plt.show()
 st.pyplot(fig)
 
 
