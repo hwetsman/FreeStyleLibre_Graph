@@ -179,10 +179,14 @@ avg_df = Set_Meds(avg_df, meds)
 # plt.show()
 # 1/0
 print('\nGenerating plot...')
-figure(figsize=(15, 8))
+# figure(figsize=(15, 8))
+fig, ax = plt.subplots()
+fig.set_size_inches(15, 8)
+# fig(figsize=(15, 8))
 sns.set_style('dark')
 # glucose
-plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
+ax.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
+# plt.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
 # mean
 avg_df['rolling'] = avg_df.Glucose.rolling(7).mean().shift(-3)
 sns.lineplot(x=avg_df.index, y='rolling', data=avg_df)
@@ -202,7 +206,8 @@ for i in range(med_num):
         start = start_date
     else:
         pass
-    end = pd.to_datetime(med.get('end_date'))
+    # end = pd.to_datetime(med.get('end_date'))
+    end = end_date
     name = med.get('name')
     plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
                linewidth=6, label=name, color=med_colors[i])
