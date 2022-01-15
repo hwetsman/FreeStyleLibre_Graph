@@ -116,7 +116,7 @@ files = os.listdir(path)
 df = pd.DataFrame()
 for file in files:
     # print(f'\nLoading file {file}...')
-    temp = pd.read_csv(path+file, header=1)
+    temp = pd.read_csv(path+file, header=1, low_memory=False)
     df = df.append(temp)
 
 # prune df
