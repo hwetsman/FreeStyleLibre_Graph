@@ -98,5 +98,8 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
+# Limit records
+print('\nDropping and organizing records...')
+df = Dedup_and_Sort(df)
 
 print(df)
