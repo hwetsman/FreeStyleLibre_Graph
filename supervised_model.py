@@ -25,6 +25,31 @@ matplotlib.use('TkAgg')
 pd.options.mode.chained_assignment = None
 
 
+def Combine_Glu(df):
+    """ This function divides the df into measurements and notes where measurements
+    are the rows created by either historical, scanned or input glucose readings.
+    If first fills measurement columns with zeros for NaN's and then adds them
+    together in a new 'Glucose' column. The two created df's are then appended,
+    the unnecessary cols are dropped, the index is reset, and the df is
+    returned.
+    """
+    print('\nCombining measurements...')
+    notes = df[df['Record Type'] >= 5]
+    measures = df[df['Record Type'] <= 2]
+    measures[['Historic Glucose mg/dL', 'Scan Glucose mg/dL']
+             ] = measures[['Historic Glucose mg/dL', 'Scan Glucose mg/dL']].fillna(value=0)
+    measures['Glu'] = measures.loc[:, ['Historic Glucose mg/dL', 'Scan Glucose mg/dL']].sum(axis=1)
+    df = measures.append(notes)
+    df.drop(['Record Type',
+             'Historic Glucose mg/dL',
+             'Scan Glucose mg/dL',
+             'Non-numeric Food'], inplace=True, axis=1)
+    df.columns = ['DateTime', 'Notes', 'Glucose']
+    df.set_index('DateTime', inplace=True, drop=True)
+    df.reset_index(inplace=True)
+    return(df)
+
+
 def Feature_Eng(df):
     """
     This function takes the input df, drops unneeded columns, renames others,
