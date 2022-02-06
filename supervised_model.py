@@ -23,3 +23,9 @@ from matplotlib.pyplot import figure
 import matplotlib
 matplotlib.use('TkAgg')
 pd.options.mode.chained_assignment = None
+
+
+# get most recent data
+path = './most_recent_data/'
+# files = os.listdir(path)
+file = os.listdir(path)[0]
