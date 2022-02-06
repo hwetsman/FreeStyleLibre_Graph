@@ -72,6 +72,17 @@ def Feature_Eng(df):
     return df
 
 
+def Dedup_and_Sort(df):
+    """ This function drops the duplicate rows in the df and sorts the values by
+    the DateTime column in an ascending fashion.
+    input: pandas df
+    output: pandas df
+    """
+    df.drop_duplicates(inplace=True)
+    df = df.sort_values(by='DateTime', ascending=True)
+    return df
+
+
 # IMPORT DATA
 # get most recent data
 path = './most_recent_data/'
@@ -87,3 +98,5 @@ df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y
 # Engineer Features
 print('\nDropping unneeded columns...')
 df = Feature_Eng(df)
+
+print(df)
