@@ -101,5 +101,17 @@ df = Feature_Eng(df)
 # Limit records
 print('\nDropping and organizing records...')
 df = Dedup_and_Sort(df)
+# select records with Notes
+dt_list = [x for x in df[~df.Notes.isna()].DateTime.tolist()]
+# select dt for 2hr pp
+# pp_list = [x + timedelta(hours=2) for x in dt_list]
+start_time_list = [x + timedelta(minutes=115) for x in dt_list]
+end_time_list = [x + timedelta(minutes=125) for x in dt_list]
+# select records with 2hr pp glucose
 
-print(df)
+# order and select features (food, starting glucose) and labels (2hr pp)
+# print(df)
+print(dt_list[-1])
+print(start_time_list[-1])
+print(end_time_list[-1])
+print(len(end_time_list))
