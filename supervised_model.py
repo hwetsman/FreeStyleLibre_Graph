@@ -4,7 +4,9 @@
 Created on Sunday Feb 06 2022
 
 @author: howardwetsman
-To do: import data
+This script imports a file from the latest_data dir.
+
+To do: import data -done
     prepare data
     initialize model
     visualize outcome
@@ -70,6 +72,7 @@ def Feature_Eng(df):
     return df
 
 
+# IMPORT DATA
 # get most recent data
 path = './most_recent_data/'
 # files = os.listdir(path)
@@ -77,6 +80,7 @@ file = os.listdir(path)[0]
 # create df
 df = pd.read_csv(path+file, header=1)
 
+# PREPARE DATA
 # convert timestamps to datetime
 print('\nConverting Timestamps...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
