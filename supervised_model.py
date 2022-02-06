@@ -29,3 +29,6 @@ pd.options.mode.chained_assignment = None
 path = './most_recent_data/'
 # files = os.listdir(path)
 file = os.listdir(path)[0]
+
+# create df
+df = pd.read_csv(path+file, header=1)
