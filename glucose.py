@@ -175,7 +175,7 @@ sns.lineplot(x=avg_df.index, y='rolling', data=avg_df)
 # std dev
 plt.fill_between(avg_df.index, avg_df['rolling'] + std_df['Glucose']/2,
                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
-
+print(avg_df)
 med_num = len(meds)
 med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink', 'brown', 'turquoise']
 for i in range(med_num):
@@ -183,6 +183,10 @@ for i in range(med_num):
     med_start = pd.to_datetime(med.get('start_date'))
     med_end = pd.to_datetime(med.get('end_date'))
     name = med.get('name')
+    med_df = avg_df[avg_df[name] > 0]
+    avg = int(med_df['Glucose'].mean())
+    print(avg)
+    print(med_df)
     # if med_end is before graph start
     if max(med_end, start_date) == start_date:
         pass
