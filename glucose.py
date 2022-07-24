@@ -106,7 +106,10 @@ metformin = {'name': 'MTFM', 'start_date': '2021-9-20', 'end_date': '2021-10-16'
 CoQ_10 = {'name': 'CoQ_10', 'start_date': '2021-11-11', 'end_date': '2021-11-21'}
 ezetimibe = {'name': 'EZTMB', 'start_date': '2021-11-27',
              'end_date': datetime.today().date().strftime('%Y-%m-%d')}
-meds = [cholestiramine, metformin, CoQ_10, ezetimibe]
+NAD = {'name': 'NAD', 'start_date': '2022-06-25', 'end_date': '2022-07-18'}
+cromolyn = {'name': 'CROM', 'start_date': '2022-07-14', 'end_date': '2022-07-21'}
+breo = {'name': 'BREO', 'start_date': '2022-06-08', 'end_date': '2022-06-24'}
+meds = [cholestiramine, metformin, CoQ_10, ezetimibe, NAD, cromolyn, breo]
 
 # get most recent data
 path = './most_recent_data/'
@@ -115,7 +118,7 @@ files = os.listdir(path)
 # create df
 df = pd.DataFrame()
 for file in files:
-    # print(f'\nLoading file {file}...')
+    print(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1, low_memory=False)
     df = df.append(temp)
 
@@ -174,18 +177,19 @@ plt.fill_between(avg_df.index, avg_df['rolling'] + std_df['Glucose']/2,
                  avg_df.Glucose - std_df.Glucose/2, alpha=0.8, color='lightskyblue')
 
 med_num = len(meds)
-med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink']
+med_colors = ['red', 'blue', 'green', 'gold', 'purple', 'pink', 'brown', 'turquoise']
 for i in range(med_num):
     med = meds[i]
-    start = pd.to_datetime(med.get('start_date'))
-    if start < start_date:
-        start = start_date
-    else:
-        pass
-    end = end_date
+    med_start = pd.to_datetime(med.get('start_date'))
+    med_end = pd.to_datetime(med.get('end_date'))
     name = med.get('name')
-    plt.hlines(3*i, start, end, linestyles='solid', alpha=1,
-               linewidth=6, label=name, color=med_colors[i])
+    # if med_end is before graph start
+    if max(med_end, start_date) == start_date:
+        pass
+    else:  # add med to bottom of graph
+        plt.hlines(3*i, max(med_start, start_date), med_end, linestyles='solid', alpha=1,
+                   linewidth=6, label=name, color=med_colors[i])
+
 # horizontal lines
 plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
            colors='red', linestyles='dotted', alpha=.4)
