@@ -184,15 +184,20 @@ for i in range(med_num):
     med_end = pd.to_datetime(med.get('end_date'))
     name = med.get('name')
     med_df = avg_df[avg_df[name] > 0]
-    avg = int(med_df['Glucose'].mean())
-    print(avg)
-    print(med_df)
+    if med_df.shape[0] == 0:
+        pass
+    else:
+        print(name)
+        print(med_df)
+        avg = int(med_df['Glucose'].mean())
+        label = f'{name} - {avg}'
+
     # if med_end is before graph start
     if max(med_end, start_date) == start_date:
         pass
     else:  # add med to bottom of graph
         plt.hlines(3*i, max(med_start, start_date), med_end, linestyles='solid', alpha=1,
-                   linewidth=6, label=name, color=med_colors[i])
+                   linewidth=6, label=label, color=med_colors[i])
 
 # horizontal lines
 plt.hlines(110, avg_df.index.min(), avg_df.index.max(),
