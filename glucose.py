@@ -136,9 +136,9 @@ df.drop(['Device', 'Serial Number',
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 
 default_start = df['Device Timestamp'].min()
-start_date = pd.to_datetime(st.date_input('Start_Date', value=default_start))
+start_date = pd.to_datetime(st.sidebar.date_input('Start_Date', value=default_start))
 default_end = df['Device Timestamp'].max()
-end_date = pd.to_datetime(st.date_input('End_Date', value=default_end))
+end_date = pd.to_datetime(st.sidebar.date_input('End_Date', value=default_end))
 
 df = Limit_to_Current(df, start_date, end_date)
 # print('Limited to Current...')
