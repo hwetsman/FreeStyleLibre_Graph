@@ -98,7 +98,7 @@ def Set_Meds(avg_df, meds):
     return avg_df
 
 
-st.write('Pleae select the start and end dates if you want to change the range of the graph.  \
+st.sidebar.write('Pleae select the start and end dates if you want to change the range of the graph.  \
 To enlarge the size of the graph put your mouse over the hamburger menu in the upper right, select \
 settings, and select "wide mode".')
 cholestiramine = {'name': 'CLSM', 'start_date': '2021-8-17', 'end_date': '2021-10-13'}
@@ -166,7 +166,7 @@ std_df = Create_Std_DF(df)
 avg_df = Set_Meds(avg_df, meds)
 
 # print('\nGenerating plot...')
-fig, ax = plt.subplots(figsize=(15, 8))
+fig, ax = plt.subplots(figsize=(16, 10))
 sns.set_style('dark')
 ax.plot(df.index, df['Glucose'], label='Glu', alpha=.4)
 # mean
