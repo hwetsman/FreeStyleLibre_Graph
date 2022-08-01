@@ -30,12 +30,10 @@ def Combine_Glu(df):
         measures.loc[:, 'Historic Glucose mg/dL']
     df = measures.append(notes)
     df.sort_values(by='Device Timestamp', inplace=True)
-    st.write('df before drop', df)
     df.drop(['Record Type',
              'Historic Glucose mg/dL',
              'Scan Glucose mg/dL',
              'Non-numeric Food'], inplace=True, axis=1)
-    st.write('df after drop', df)
     df.columns = ['DateTime', 'Notes', 'Glucose']
     df.set_index('DateTime', inplace=True, drop=True)
     df.reset_index(inplace=True)
@@ -47,9 +45,7 @@ def Create_Avg_DF(df):
     avg_df = df1.groupby(
         pd.Grouper(freq='d')).mean().dropna(how='all')
     avg_df = avg_df[['Glucose']]
-    st.write(avg_df)
     avg_df = avg_df.rename(columns={'Glucose': 'mean_glucose'})
-    st.write(avg_df)
     return avg_df
 
 
@@ -60,6 +56,15 @@ def Create_Max_DF(df):
     max_df = max_df[['Glucose']]
     max_df = max_df.rename(columns={'Glucose': 'max_glucose'})
     return max_df
+
+
+def Get_Glu_By_Day(glu_only):
+    daily_average = Create_Avg_DF(glu_only)
+    daily_max = Create_Max_DF(glu_only)
+    glu_by_day = pd.merge(daily_max, daily_average, on='DateTime', how='outer')
+    glu_by_day.reset_index(inplace=True, drop=False)
+    glu_by_day.rename(columns={'DateTime': 'date'}, inplace=True)
+    return glu_by_day
 
 
 st.set_page_config(layout="wide")
@@ -75,7 +80,7 @@ for file in files:
     temp = pd.read_csv(path+file, header=1, low_memory=False)
     df = df.append(temp)
     print(f'appended {file} to df')
-st.write(df)
+
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 df.drop(['Device', 'Serial Number',
         'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
@@ -86,9 +91,25 @@ df.drop(['Device', 'Serial Number',
 
 df1 = df.drop_duplicates()
 glu_only = Combine_Glu(df1)
-st.write('glu only', glu_only)
-daily_average = Create_Avg_DF(glu_only)
-st.write('average', daily_average)
-st.write('glu only', glu_only)
-daily_max = Create_Max_DF(glu_only)
-st.write('max', daily_max)
+
+st.write('df1', df1)
+
+
+def Combine_Notes(df1):
+    notes_only = df1[['Notes', 'Device Timestamp']]
+    notes_only = notes_only.rename(columns={'Device Timestamp': 'DateTime'})
+    # notes_only.set_index('DateTime', inplace=True, drop=True)
+    st.write('before groupby', notes_only)
+    notes_only.Notes.fillna('')
+    daily_notes = notes_only.groupby('DateTime')['Notes'].apply(' '.join)
+    # df = DATA.groupby('ID')['CODE'].apply(',' .join).reset_index(drop = False)
+    # daily_notes = notes_only.groupby('DateTime').agg(lambda x: ''.join(set(x)))
+    return daily_notes
+
+
+notes_only = Combine_Notes(df1)
+st.write('notes only', notes_only)
+
+
+glu_by_day = Get_Glu_By_Day(glu_only)
+# st.write(glu_by_day)
