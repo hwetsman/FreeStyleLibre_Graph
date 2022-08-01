@@ -73,7 +73,6 @@ def Combine_Notes(df1):
     notes_only = notes_only.rename(columns={'Device Timestamp': 'DateTime'})
     notes_only.Notes = notes_only.Notes.fillna('')
     notes_only.set_index('DateTime', inplace=True, drop=True)
-    st.write('before groupby', notes_only)
     daily_notes = notes_only.groupby(pd.Grouper(freq='d'))[
         'Notes'].apply(' '.join).reset_index(drop=False)
     daily_notes['next'] = 0
@@ -130,9 +129,9 @@ def Combine_Notes(df1):
     new_string = list(set(new_string))
     for col in new_string:
         daily_notes[col] = 0
-    a = st.empty()
-    b = st.empty()
-    a.write('I am working your data...')
+    # a = st.empty()
+    # b = st.empty()
+    # a.write('I am working your data...')
     for idx, r in daily_notes.iterrows():
         starting_list = daily_notes.loc[idx, 'Notes'].split(' ')
         if len(starting_list) == 1:
@@ -140,7 +139,7 @@ def Combine_Notes(df1):
         else:
             working_list = [x for x in starting_list if x not in drop]
             for word in working_list:
-                b.write(idx)
+                # b.write(idx)
                 daily_notes.loc[idx, word] = 1+daily_notes.loc[idx, word]
     daily_notes.drop(['Notes', 'next'], axis=1, inplace=True)
     daily_notes = daily_notes.rename(columns={'DateTime': 'date'})
@@ -148,7 +147,8 @@ def Combine_Notes(df1):
 
 
 st.set_page_config(layout="wide")
-
+a = st.empty()
+a.write('I am loading your data...')
 path = './most_recent_data/'
 files = os.listdir(path)
 #
@@ -156,11 +156,11 @@ files = os.listdir(path)
 # # create df
 df = pd.DataFrame()
 for file in files:
-    print(f'\nLoading file {file}...')
+    # print(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1, low_memory=False)
     df = df.append(temp)
-    print(f'appended {file} to df')
-
+    # print(f'appended {file} to df')
+a.write('I am working your data...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 df.drop(['Device', 'Serial Number',
         'Non-numeric Rapid-Acting Insulin', 'Rapid-Acting Insulin (units)',
@@ -183,3 +183,5 @@ glu_by_day = Get_Glu_By_Day(glu_only)
 
 freestyle_by_day = pd.merge(glu_by_day, food_by_day, on='date', how='outer')
 st.write(freestyle_by_day)
+freestyle_by_day.to_csv('freestyle_by_day.csv', index=False)
+a.write('I have finished your data and written the export file freestyle_by_day.csv')
