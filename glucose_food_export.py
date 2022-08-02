@@ -151,15 +151,22 @@ a = st.empty()
 a.write('I am loading your data...')
 path = './most_recent_data/'
 files = os.listdir(path)
+files = [x for x in files if '.DS' not in x]
+
 #
 #
 # # create df
 df = pd.DataFrame()
+
 for file in files:
     # print(f'\nLoading file {file}...')
     temp = pd.read_csv(path+file, header=1, low_memory=False)
+    temp['Device Timestamp'] = pd.to_datetime(temp['Device Timestamp'])
+    temp.sort_values(by='Device Timestamp', inplace=True)
     df = df.append(temp)
+    df.sort_values(by='Device Timestamp')
     # print(f'appended {file} to df')
+
 a.write('I am working your data...')
 df['Device Timestamp'] = pd.to_datetime(df['Device Timestamp'], format="%m-%d-%Y %I:%M %p")
 df.drop(['Device', 'Serial Number',
@@ -168,20 +175,21 @@ df.drop(['Device', 'Serial Number',
          'Non-numeric Long-Acting Insulin', 'Long-Acting Insulin (units)',
          'Ketone mmol/L', 'Meal Insulin (units)', 'Correction Insulin (units)',
          'User Change Insulin (units)', 'Strip Glucose mg/dL'], inplace=True, axis=1)
-
 df1 = df.drop_duplicates()
+
 glu_only = Combine_Glu(df1)
 
-# st.write('df1', df1)
-
 food_by_day = Combine_Notes(df1)
-# st.write('notes only', food_by_day)
 
 
 glu_by_day = Get_Glu_By_Day(glu_only)
-# st.write(glu_by_day)
+
 
 freestyle_by_day = pd.merge(glu_by_day, food_by_day, on='date', how='outer')
+freestyle_by_day = freestyle_by_day.dropna()
+
+freestyle_by_day.date = pd.to_datetime(freestyle_by_day.date)
+freestyle_by_day.sort_values(by='date')
 st.write(freestyle_by_day)
 freestyle_by_day.to_csv('freestyle_by_day.csv', index=False)
 a.write('I have finished your data and written the export file freestyle_by_day.csv')
