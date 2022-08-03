@@ -75,8 +75,24 @@ def Combine_Notes(df1):
     notes_only.set_index('DateTime', inplace=True, drop=True)
     daily_notes = notes_only.groupby(pd.Grouper(freq='d'))[
         'Notes'].apply(' '.join).reset_index(drop=False)
+    # st.write(daily_notes.Notes.tolist())
     daily_notes['next'] = 0
+    daily_notes.Notes = daily_notes.Notes.str.replace(
+        ' gluten free pancakes ', ' glutenfreepancakes ')
 
+    daily_notes.Notes = daily_notes.Notes.str.replace(',', '')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' Cherry juice ', ' cherryjuice ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' fish oil ', ' fishoil ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' gluten free ', ' glutenfree ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' string cheese ', ' stringcheese ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' cheddar cheese ', ' cheddarcheese ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' sweet potato ', ' sweetpotato ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' asafish ', 'asa fish')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' ice cream ', ' icecream ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' corn chips ', ' cornchips ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' pop corn ', ' popcorn ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' enlytezantac ', ' enlyte zantac ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' luna bar ', ' lunabar ')
     daily_notes.Notes = daily_notes.Notes.str.replace('with', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('from', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('and', '')
@@ -84,7 +100,7 @@ def Combine_Notes(df1):
     daily_notes.Notes = daily_notes.Notes.str.replace(' w ', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' x ', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' mg ', ' ')
-    daily_notes.Notes = daily_notes.Notes.str.replace(' pb ', ' peanutbutter ')
+    # daily_notes.Notes = daily_notes.Notes.str.replace(' pb ', ' peanutbutter ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' peanut butter ', ' peanutbutter ')
     daily_notes.Notes = daily_notes.Notes.str.replace('after', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('exercise', '')
@@ -95,7 +111,7 @@ def Combine_Notes(df1):
     daily_notes.Notes = daily_notes.Notes.str.replace('    ', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('   ', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('  ', ' ')
-    daily_notes.Notes = daily_notes.Notes.str.replace(',', '')
+
     daily_notes.Notes = daily_notes.Notes.str.replace('-', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('.', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('finger stick', '')
@@ -103,15 +119,16 @@ def Combine_Notes(df1):
     daily_notes.Notes = daily_notes.Notes.str.replace('\d+', '')
     daily_notes.Notes = daily_notes.Notes.str.lower()
     string = set(' '.join(daily_notes.Notes).split(' '))
-    drop = ['', 'reveratrol', 'in', 'dao', 'a', 'l-methylfolate', 'cromalyn', 'glutathione', 'ago', 'flonase',
-            'little', 'fast', 'claritinzantac', 'ten', 'note', 'yesterday', 'chromium', 'took', 'cold', 'feeling', 'zantac',
-            'humans', 'finger', 'heat', 'hot', 'kind', 'started', 'tylenol', 'cholestiramine', 'strength', 'stick', 'that',
-            'bite', 'without', 'claritin', 'vsl', "mosca's", 'baby', 'after', 'lunch', 'one', 'exercise', 'this', 'black',
-            'all', 'zantaz', 'from', 'local', 'tow', 'x', ' ', 'scoop', 'vit', 'soft', 'string', 'glucose', 'big', 'chromium',
-            'two', 'got', 'enzymes', 'enlytezantac', 'an', 'on', 'no', 'nad', 'red', 'added', 'walk', 'as', 'asa', 'resveratrol',
-            'prednisone', 'artifact', 'four', 'hard', 'sonsor', 'enlyte', 'stevia', 'extra', 'with', 'it', '/', 'd', 'dinner',
-            'tums', 'late', 'same', 'binders', 'now', 'histamine', 'headache', 'at', 'k', 'w', 'mg', 'd', '/', 'of', 'hr',
-            'frig', 'frig', 'next']
+    drop = ['', 'next', '/']
+    # drop = ['', 'reveratrol', 'in', 'dao', 'a', 'l-methylfolate', 'cromalyn', 'glutathione', 'ago', 'flonase',
+    #         'little', 'fast', 'claritinzantac', 'ten', 'note', 'yesterday', 'chromium', 'took', 'cold', 'feeling', 'zantac',
+    #         'humans', 'finger', 'heat', 'hot', 'kind', 'started', 'tylenol', 'cholestiramine', 'strength', 'stick', 'that',
+    #         'bite', 'without', 'claritin', 'vsl', "mosca's", 'baby', 'after', 'lunch', 'one', 'exercise', 'this', 'black',
+    #         'all', 'zantaz', 'from', 'local', 'tow', 'x', ' ', 'scoop', 'vit', 'soft', 'string', 'glucose', 'big', 'chromium',
+    #         'two', 'got', 'enzymes', 'enlytezantac', 'an', 'on', 'no', 'nad', 'red', 'added', 'walk', 'as', 'asa', 'resveratrol',
+    #         'prednisone', 'artifact', 'four', 'hard', 'sonsor', 'enlyte', 'stevia', 'extra', 'with', 'it', '/', 'd', 'dinner',
+    #         'tums', 'late', 'same', 'binders', 'now', 'histamine', 'headache', 'at', 'k', 'w', 'mg', 'd', '/', 'of', 'hr',
+    #         'frig', 'frig', 'next']
     int_string = [x for x in string if x not in drop]
     string_3 = [x for x in int_string if x not in drop]
     new_string = []
