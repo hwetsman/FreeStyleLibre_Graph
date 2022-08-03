@@ -75,16 +75,24 @@ def Combine_Notes(df1):
     notes_only.set_index('DateTime', inplace=True, drop=True)
     daily_notes = notes_only.groupby(pd.Grouper(freq='d'))[
         'Notes'].apply(' '.join).reset_index(drop=False)
-    # st.write(daily_notes.Notes.tolist())
-    daily_notes['next'] = 0
-    daily_notes.Notes = daily_notes.Notes.str.replace(
-        ' gluten free pancakes ', ' glutenfreepancakes ')
+    daily_notes.Notes = daily_notes.Notes.str.lower()
 
     daily_notes.Notes = daily_notes.Notes.str.replace(',', '')
+    daily_notes.Notes = daily_notes.Notes.str.replace('\'', '')
+
+    daily_notes.Notes = daily_notes.Notes.str.replace(
+        ' gluten free pancakes ', ' glutenfreepancakes ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' corn chips ', ' cornchips ')
+
+    daily_notes.Notes = daily_notes.Notes.str.replace(' potato chips ', ' potatochips ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' Cherry juice ', ' cherryjuice ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' fish oil ', ' fishoil ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' gluten free ', ' glutenfree ')
+    daily_notes.Notes = daily_notes.Notes.str.replace("potato’s", 'potato')
+    daily_notes.Notes = daily_notes.Notes.str.replace("potatoes", 'potato')
     daily_notes.Notes = daily_notes.Notes.str.replace(' string cheese ', ' stringcheese ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' omelette ', ' egg cheese ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' eggs ', ' egg ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' cheddar cheese ', ' cheddarcheese ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' sweet potato ', ' sweetpotato ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' asafish ', 'asa fish')
@@ -93,6 +101,7 @@ def Combine_Notes(df1):
     daily_notes.Notes = daily_notes.Notes.str.replace(' pop corn ', ' popcorn ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' enlytezantac ', ' enlyte zantac ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' luna bar ', ' lunabar ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' iced tea ', ' icedtea ')
     daily_notes.Notes = daily_notes.Notes.str.replace('with', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('from', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('and', '')
@@ -111,15 +120,14 @@ def Combine_Notes(df1):
     daily_notes.Notes = daily_notes.Notes.str.replace('    ', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('   ', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('  ', ' ')
-
     daily_notes.Notes = daily_notes.Notes.str.replace('-', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('.', ' ')
     daily_notes.Notes = daily_notes.Notes.str.replace('finger stick', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('blood stick', '')
     daily_notes.Notes = daily_notes.Notes.str.replace('\d+', '')
-    daily_notes.Notes = daily_notes.Notes.str.lower()
+
     string = set(' '.join(daily_notes.Notes).split(' '))
-    drop = ['', 'next', '/']
+    drop = ['', '/']
     # drop = ['', 'reveratrol', 'in', 'dao', 'a', 'l-methylfolate', 'cromalyn', 'glutathione', 'ago', 'flonase',
     #         'little', 'fast', 'claritinzantac', 'ten', 'note', 'yesterday', 'chromium', 'took', 'cold', 'feeling', 'zantac',
     #         'humans', 'finger', 'heat', 'hot', 'kind', 'started', 'tylenol', 'cholestiramine', 'strength', 'stick', 'that',
@@ -144,21 +152,22 @@ def Combine_Notes(df1):
         else:
             new_string.append(word)
     new_string = list(set(new_string))
+    # create a col for each word in new_string
     for col in new_string:
         daily_notes[col] = 0
-    # a = st.empty()
-    # b = st.empty()
-    # a.write('I am working your data...')
+
+    # add to each col if col in string
     for idx, r in daily_notes.iterrows():
         starting_list = daily_notes.loc[idx, 'Notes'].split(' ')
+        # st.write(daily_notes.loc[idx, 'Notes'], starting_list)
         if len(starting_list) == 1:
             pass
         else:
             working_list = [x for x in starting_list if x not in drop]
             for word in working_list:
-                # b.write(idx)
                 daily_notes.loc[idx, word] = 1+daily_notes.loc[idx, word]
-    daily_notes.drop(['Notes', 'next'], axis=1, inplace=True)
+    st.write(daily_notes)
+    daily_notes.drop(['Notes'], axis=1, inplace=True)
     daily_notes = daily_notes.rename(columns={'DateTime': 'date'})
     return daily_notes
 
