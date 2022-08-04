@@ -94,6 +94,7 @@ def Combine_Notes(df1):
     daily_notes.Notes = daily_notes.Notes.str.replace(' omelette ', ' egg cheese ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' eggs ', ' egg ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' cheddar cheese ', ' cheddarcheese ')
+    daily_notes.Notes = daily_notes.Notes.str.replace(' graham crackers ', ' grahamcrackers ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' sweet potato ', ' sweetpotato ')
     daily_notes.Notes = daily_notes.Notes.str.replace(' asafish ', 'asa fish')
     daily_notes.Notes = daily_notes.Notes.str.replace(' ice cream ', ' icecream ')
